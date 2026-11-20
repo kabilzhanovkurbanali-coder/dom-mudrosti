@@ -1,0 +1,1771 @@
+{
+  "_about": "Раскадровка фильмов. Для каждой части фильма (intro, story:N, legend, legacy) — кадры, которые сменяют друг друга под голос. p — описание кадра для нейросети (на английском, {hero} подставляется из hero; к описанию добавляется setting — эпоха и место, кроме сцен в Европе и в наше время), m — движение камеры (push, pull, left, right, rise, fall, drift), fx — частицы (dust, embers, mist, stars, gold, smoke, none), fact — крупная надпись [главное, пояснение]. Кадры создаёт tools/gen_shots.py; описание вместе со стилем должно укладываться в 77 токенов CLIP. portrait — портрет учёного (кадр portrait-1), рисуется в нескольких вариантах, лучший выбирается вручную.",
+  "style": "cinematic film still, photorealistic, sharp focus, highly detailed, 35mm photograph, dramatic warm light",
+  "negative": "text, letters, watermark, logo, caption, frame, border, cartoon, anime, illustration, painting, drawing, 3d render, cgi, deformed, bad anatomy, extra fingers, mutated hands, blurry, motion blur, double exposure, ghosting, out of focus, lowres, oversaturated, eyeglasses",
+  "scholars": {
+    "al-khwarizmi": {
+      "hero": "a Persian scholar from Khwarezm in his forties with a short dark beard, white turban and deep indigo robe",
+      "setting": "9th-century Abbasid Baghdad",
+      "beats": {
+        "portrait": [
+          {
+            "p": "close-up portrait of {hero}, handsome dignified face, wise kind eyes, detailed natural skin texture, soft warm window light, looking into the camera",
+            "m": "push",
+            "fx": "dust"
+          }
+        ],
+        "intro": [
+          {
+            "p": "aerial view of the round walled city of Baghdad at golden sunrise, 9th century, mud-brick walls, great green dome in the centre, the Tigris river with wooden boats, morning haze",
+            "fx": "mist"
+          },
+          {
+            "p": "portrait of {hero} standing in a vast candlelit library holding a scroll, looking into the camera, shelves of manuscripts behind him"
+          }
+        ],
+        "story:0": [
+          {
+            "p": "Abbasid caliph seated on a carved throne in a grand columned hall, scholars in turbans bowing before him, oil lamps, rich carpets, incense smoke"
+          },
+          {
+            "p": "the House of Wisdom in Baghdad, translators at low wooden desks copying manuscripts, scrolls stacked everywhere, shafts of sunlight through high windows",
+            "m": "right"
+          },
+          {
+            "p": "a camel caravan crossing golden desert dunes at sunset towards a distant city, {hero} riding at the front",
+            "m": "left"
+          }
+        ],
+        "story:1": [
+          {
+            "p": "close-up of a hand writing with a reed pen on parchment, brass ink pot, oil lamp, geometric diagrams of squares on the page"
+          },
+          {
+            "p": "busy medieval market in Baghdad, merchants weighing goods on brass scales, piles of spices and coins, crowd in turbans",
+            "m": "right"
+          },
+          {
+            "p": "surveyors measuring a field with ropes and wooden stakes beside an irrigation canal, date palms, golden hour",
+            "m": "left",
+            "fact": [
+              "6 видов уравнений",
+              "и общий способ решить каждое"
+            ]
+          }
+        ],
+        "story:2": [
+          {
+            "p": "an ornate brass balance scale perfectly balanced with weights on both pans, dark background, dramatic rim light, dust in the air",
+            "fx": "gold",
+            "fact": [
+              "аль-джабр",
+              "восполнение"
+            ]
+          },
+          {
+            "p": "{hero} holding up a manuscript page by candlelight, intense focused gaze, students watching from the shadows",
+            "fact": [
+              "алгебра",
+              "наука, названная по его книге"
+            ]
+          }
+        ],
+        "story:3": [
+          {
+            "p": "a wooden board covered with fine sand, a finger drawing a small circle in the sand, oil lamp, close-up",
+            "fact": [
+              "0",
+              "индийская десятичная система"
+            ]
+          },
+          {
+            "p": "medieval European monk scribe in a stone scriptorium translating an old book, candlelight, quill pen",
+            "m": "right",
+            "fact": [
+              "Dixit Algorizmi",
+              "«Сказал Алгоризми»"
+            ]
+          },
+          {
+            "p": "a programmer at night in a dark room lit by the glow of computer screens full of code, modern, cinematic",
+            "fx": "none",
+            "fact": [
+              "Algorizmi → алгоритм",
+              ""
+            ]
+          }
+        ],
+        "legend": [
+          {
+            "p": "the Amu Darya river delta in Khwarezm at dawn, reed marshes, ruins of an ancient mud-brick fortress, mist over the water",
+            "fx": "mist",
+            "m": "right"
+          },
+          {
+            "p": "fragments of an old burned manuscript scattered on a dark wooden table, a single candle, embers",
+            "fx": "embers"
+          }
+        ],
+        "legacy": [
+          {
+            "p": "medieval European university hall, a master teaching students from a large book, gothic windows, sunbeams",
+            "m": "right"
+          },
+          {
+            "p": "old leather-bound books stacked on a desk in a European library, a sunbeam falling on them",
+            "fact": [
+              "алгебра · алгоритм",
+              "два слова, которые помнят его"
+            ]
+          }
+        ]
+      }
+    },
+    "al-farghani": {
+      "hero": "a Central Asian astronomer from Fergana in his fifties with a grey-streaked beard, dark green turban and brown robe",
+      "setting": "9th-century Abbasid caliphate",
+      "beats": {
+        "portrait": [
+          {
+            "p": "close-up portrait of {hero}, handsome dignified face, wise kind eyes, detailed natural skin texture, soft warm window light, looking into the camera",
+            "m": "push",
+            "fx": "dust"
+          }
+        ],
+        "intro": [
+          {
+            "p": "night sky over the mountains of the Fergana valley, the Milky Way, a lone figure holding an astrolabe on a hill",
+            "fx": "stars",
+            "m": "rise"
+          },
+          {
+            "p": "portrait of {hero} holding a brass astrolabe in a candlelit study full of star charts"
+          }
+        ],
+        "story:0": [
+          {
+            "p": "astronomers on a flat mud-brick rooftop at night observing the stars with brass astrolabes, small oil lamps, a dark medieval city without electric lights, starry sky",
+            "fx": "stars",
+            "m": "right"
+          },
+          {
+            "p": "{hero} writing a book at a desk covered with star charts, a celestial globe beside him, candlelight"
+          },
+          {
+            "p": "close-up of a richly illuminated astronomy manuscript with circular diagrams of the heavens and gold leaf",
+            "fact": [
+              "«Свод науки о звёздах»",
+              "ясно и коротко"
+            ]
+          }
+        ],
+        "story:1": [
+          {
+            "p": "a brass armillary sphere glowing in candlelight, rings and small planets, dark background",
+            "fx": "gold",
+            "m": "drift"
+          },
+          {
+            "p": "crescent moon and bright planets over a desert horizon at twilight, deep blue sky",
+            "fx": "stars",
+            "m": "rise"
+          }
+        ],
+        "story:2": [
+          {
+            "p": "the Nile river at Roda island in Cairo at sunset, medieval feluccas with white sails, palm trees",
+            "fx": "mist",
+            "m": "right"
+          },
+          {
+            "p": "inside the Nilometer of Cairo, a deep square stone well with stairs descending to water, a tall octagonal marble measuring column in the centre, light falling from above",
+            "m": "fall",
+            "fact": [
+              "861",
+              "ниломер стоит до сих пор"
+            ]
+          },
+          {
+            "p": "Egyptian farmers harvesting wheat on the Nile floodplain, scribes counting sacks of grain for taxes",
+            "m": "left"
+          }
+        ],
+        "story:3": [
+          {
+            "p": "medieval monks translating manuscripts in a Toledo scriptorium, candles, stacks of books",
+            "m": "right"
+          },
+          {
+            "p": "a 15th-century Genoese navigator studying a globe and old sea charts by candlelight"
+          },
+          {
+            "p": "three caravels sailing across the vast Atlantic ocean at sunset, dramatic clouds",
+            "fx": "mist",
+            "m": "right",
+            "fact": [
+              "Земля меньше?",
+              "Колумб спутал арабскую милю с римской"
+            ]
+          }
+        ],
+        "legend": [
+          {
+            "p": "hundreds of workers digging a long canal in the desert, 9th century, baskets of earth, dust in the air",
+            "m": "right"
+          },
+          {
+            "p": "a dry canal bed with water stopping halfway, worried engineers in turbans looking at it"
+          },
+          {
+            "p": "dark palace corridor at night, a dagger glinting in torchlight, guards in shadow",
+            "fx": "embers"
+          }
+        ],
+        "legacy": [
+          {
+            "p": "a medieval European scholar reading a Latin astronomy book by candlelight, star chart on the wall"
+          },
+          {
+            "p": "close-up of the Moon surface with deep craters, stark shadows, black space",
+            "fx": "stars",
+            "m": "drift",
+            "fact": [
+              "Альфраган",
+              "кратер на Луне"
+            ]
+          }
+        ]
+      }
+    },
+    "al-kindi": {
+      "hero": "an Arab nobleman philosopher in his fifties with a neatly trimmed black beard, white turban and elegant cream robe",
+      "setting": "9th-century Abbasid Baghdad",
+      "beats": {
+        "portrait": [
+          {
+            "p": "close-up portrait of {hero}, handsome dignified face, wise kind eyes, detailed natural skin texture, soft warm window light, looking into the camera",
+            "m": "push",
+            "fx": "dust"
+          }
+        ],
+        "intro": [
+          {
+            "p": "medieval Baghdad on the Tigris at dusk, mud-brick houses, domes and minarets, small oil lamps in windows, wooden boats on the river, no electric lights",
+            "fx": "mist"
+          },
+          {
+            "p": "portrait of {hero} in a library, thoughtful expression, warm candlelight"
+          }
+        ],
+        "story:0": [
+          {
+            "p": "a noble Arab tribal camp with large tents and horses in the desert at sunset",
+            "m": "right"
+          },
+          {
+            "p": "{hero} reading a manuscript beside a marble bust of Aristotle in a library"
+          },
+          {
+            "p": "{hero} teaching a young prince in a palace courtyard with a fountain",
+            "m": "left"
+          }
+        ],
+        "story:1": [
+          {
+            "p": "close-up of a mysterious encrypted letter covered with strange symbols, red wax seal, candlelight"
+          },
+          {
+            "p": "{hero} counting symbols on parchment and making tally marks, intense focus, papers everywhere"
+          },
+          {
+            "p": "a secret messenger on horseback galloping at night carrying sealed letters, moonlight",
+            "m": "right",
+            "fact": [
+              "частотный анализ",
+              "самый частый знак — самая частая буква"
+            ]
+          }
+        ],
+        "story:2": [
+          {
+            "p": "a magnificent library wall with hundreds of manuscripts and scrolls, wooden ladder, sunbeams",
+            "m": "rise",
+            "fact": [
+              "≈ 260",
+              "трактатов"
+            ]
+          },
+          {
+            "p": "still life of a curved sword blade, perfume bottles and an oud on a table, candlelight"
+          },
+          {
+            "p": "medieval European monastery library, a monk opening a large book",
+            "m": "left"
+          }
+        ],
+        "story:3": [
+          {
+            "p": "soldiers carrying chests of books out of a scholar's house at night, torches",
+            "fx": "embers",
+            "m": "right"
+          },
+          {
+            "p": "{hero} standing alone in an empty library with bare shelves, dramatic light, sorrow"
+          }
+        ],
+        "legend": [
+          {
+            "p": "three brothers in rich robes kneeling before an old astronomer, negotiating, lamplight"
+          },
+          {
+            "p": "servants carrying chests of books back into a library, {hero} receiving them, warm sunlight",
+            "m": "right"
+          }
+        ],
+        "legacy": [
+          {
+            "p": "close-up of hands passing an old manuscript from one person to another, candlelight"
+          },
+          {
+            "p": "a grand Abbasid library at dawn with light pouring through tall windows",
+            "m": "rise"
+          }
+        ]
+      }
+    },
+    "ar-razi": {
+      "hero": "a Persian physician in his fifties with a greying beard, simple dark turban and physician's robe",
+      "setting": "10th-century Persia",
+      "beats": {
+        "portrait": [
+          {
+            "p": "close-up portrait of {hero}, handsome dignified face, wise kind eyes, detailed natural skin texture, soft warm window light, looking into the camera",
+            "m": "push",
+            "fx": "dust"
+          }
+        ],
+        "intro": [
+          {
+            "p": "medieval Persian city of Rey at dawn with a snow-capped volcano in the distance, mud-brick walls",
+            "fx": "mist"
+          },
+          {
+            "p": "portrait of {hero} in a hospital hall, compassionate expression, lamplight"
+          }
+        ],
+        "story:0": [
+          {
+            "p": "a young Persian man playing an oud in a courtyard at night, lantern light"
+          },
+          {
+            "p": "alchemist workshop with glass alembics and bubbling flasks, colored smoke",
+            "fx": "smoke",
+            "m": "left"
+          },
+          {
+            "p": "courtyard of a medieval Islamic hospital with a fountain, patients resting under arches, physicians walking",
+            "m": "right"
+          }
+        ],
+        "story:1": [
+          {
+            "p": "{hero} checking the pulse of a patient lying on a bed, lamplight"
+          },
+          {
+            "p": "close-up of hands writing case notes in a book, dried medicinal herbs on the table"
+          },
+          {
+            "p": "{hero} pointing skeptically at a huge ancient tome next to a marble bust of a Greek physician",
+            "fact": [
+              "опыт важнее авторитета",
+              ""
+            ]
+          }
+        ],
+        "story:2": [
+          {
+            "p": "a feverish child resting in bed, a mother and a physician beside him, candlelight",
+            "fact": [
+              "оспа ≠ корь",
+              "первое ясное описание"
+            ]
+          },
+          {
+            "p": "students gathering piles of handwritten notes and drafts into a huge book",
+            "m": "left"
+          },
+          {
+            "p": "an enormous leather-bound medical encyclopedia on a lectern, gold embossing",
+            "fact": [
+              "«Аль-Хави»",
+              "в Европе — «Continens»"
+            ]
+          }
+        ],
+        "story:3": [
+          {
+            "p": "close-up of a copper alembic distilling liquid into a glass flask, fire beneath",
+            "fx": "smoke"
+          },
+          {
+            "p": "laboratory table with crucibles, minerals, dried plants and animal horns arranged in three groups",
+            "m": "right",
+            "fact": [
+              "минералы · растения · животные",
+              ""
+            ]
+          },
+          {
+            "p": "an old blind physician with clouded eyes sitting by a window, soft light on his face"
+          }
+        ],
+        "legend": [
+          {
+            "p": "pieces of fresh meat hanging on wooden poles above flat rooftops of a medieval city",
+            "m": "right"
+          },
+          {
+            "p": "{hero} inspecting a piece of hanging meat with servants, morning light"
+          },
+          {
+            "p": "an old blind physician calmly raising his hand to refuse a surgeon holding a lancet"
+          }
+        ],
+        "legacy": [
+          {
+            "p": "a 15th-century medical school lecture in Salerno, a bearded master in a dark gown reading from a large book to students in medieval robes, candlelight, no glasses",
+            "m": "right"
+          },
+          {
+            "p": "portrait of {hero} in candlelight, wise, looking into the distance"
+          }
+        ]
+      }
+    },
+    "al-farabi": {
+      "hero": "a thin ascetic Turkic philosopher in his sixties with a long grey beard, fur-trimmed cap and plain robe",
+      "setting": "10th-century Islamic world",
+      "beats": {
+        "portrait": [
+          {
+            "p": "close-up portrait of {hero}, handsome dignified face, wise kind eyes, detailed natural skin texture, soft warm window light, looking into the camera",
+            "m": "push",
+            "fx": "dust"
+          }
+        ],
+        "intro": [
+          {
+            "p": "the ancient city of Otrar on the Syr Darya river in the steppe at sunset, mud walls",
+            "fx": "mist"
+          },
+          {
+            "p": "portrait of {hero} holding a long-necked lute in dim light"
+          }
+        ],
+        "story:0": [
+          {
+            "p": "the Syr Darya river winding through golden steppe, yurts and horses",
+            "fx": "mist",
+            "m": "right"
+          },
+          {
+            "p": "young {hero} studying with an elderly Syriac Christian scholar, manuscripts, Baghdad"
+          },
+          {
+            "p": "marble bust of Aristotle next to an open manuscript and a candle, dark background",
+            "fact": [
+              "«Второй учитель»",
+              "после Аристотеля"
+            ]
+          }
+        ],
+        "story:1": [
+          {
+            "p": "a teenage boy reading a big book by an oil lamp at night, frustrated, Bukhara",
+            "fact": [
+              "40 раз",
+              "прочитал «Метафизику»"
+            ]
+          },
+          {
+            "p": "a busy Bukhara book bazaar, a bookseller offering a small book to a boy",
+            "m": "right"
+          },
+          {
+            "p": "close-up of three old silver Islamic dirham coins with Arabic calligraphy and no portraits, lying in an open palm",
+            "fx": "gold",
+            "fact": [
+              "3 дирхема",
+              ""
+            ]
+          },
+          {
+            "p": "a happy boy giving coins to poor people at a city gate, morning sun",
+            "m": "left"
+          }
+        ],
+        "story:2": [
+          {
+            "p": "{hero} sitting on a mat in a humble room with bread and water, writing"
+          },
+          {
+            "p": "an ideal radiant medieval city with gardens and domes at golden hour, utopian",
+            "fx": "mist",
+            "m": "rise",
+            "fact": [
+              "Добродетельный город",
+              ""
+            ]
+          },
+          {
+            "p": "a scholar's desk with manuscripts laid out in order, an astrolabe, a lute and geometric tools"
+          }
+        ],
+        "story:3": [
+          {
+            "p": "the citadel of Aleppo on its hill at sunset",
+            "fx": "mist"
+          },
+          {
+            "p": "old Damascus at dusk with the Umayyad mosque minaret",
+            "fx": "mist",
+            "m": "right"
+          }
+        ],
+        "legend": [
+          {
+            "p": "{hero} playing a lute in a lavish court, courtiers laughing"
+          },
+          {
+            "p": "courtiers weeping in a candlelit palace hall as music plays",
+            "m": "left"
+          },
+          {
+            "p": "everyone asleep in a palace hall at night, a musician quietly leaving through a doorway"
+          }
+        ],
+        "legacy": [
+          {
+            "p": "silhouette of {hero} in the doorway of a library, light behind him"
+          },
+          {
+            "p": "students reading in a modern university library, warm light",
+            "fx": "none",
+            "fact": [
+              "КазНУ им. аль-Фараби",
+              "главный университет Казахстана"
+            ]
+          }
+        ]
+      }
+    },
+    "az-zahrawi": {
+      "hero": "an Andalusian Arab surgeon in his fifties with a short white beard, white turban and light robe",
+      "setting": "10th-century al-Andalus",
+      "beats": {
+        "portrait": [
+          {
+            "p": "close-up portrait of {hero}, handsome dignified face, wise kind eyes, detailed natural skin texture, soft warm window light, looking into the camera",
+            "m": "push",
+            "fx": "dust"
+          }
+        ],
+        "intro": [
+          {
+            "p": "aerial view of 10th-century Cordoba with the Great Mosque and the Roman bridge over the river, sunrise",
+            "fx": "mist"
+          },
+          {
+            "p": "portrait of {hero} holding a steel scalpel, warm light"
+          }
+        ],
+        "story:0": [
+          {
+            "p": "interior of the Great Mosque of Cordoba, endless red and white striped horseshoe arches, sunbeams",
+            "m": "right"
+          },
+          {
+            "p": "palace gardens of Madinat al-Zahra with fountains and orange trees",
+            "fx": "mist",
+            "m": "left"
+          },
+          {
+            "p": "{hero} at the bedside of a patient at night, oil lamp"
+          }
+        ],
+        "story:1": [
+          {
+            "p": "thirty leather-bound manuscript volumes on a wooden shelf",
+            "m": "rise",
+            "fact": [
+              "30 книг",
+              "энциклопедия «Ат-Тасриф»"
+            ]
+          },
+          {
+            "p": "set of medieval steel surgical instruments laid out on linen cloth, scalpels, hooks, forceps, probes",
+            "fact": [
+              "≈ 200",
+              "хирургических инструментов"
+            ]
+          },
+          {
+            "p": "{hero} with a blacksmith shaping a new instrument at a forge, sparks",
+            "fx": "embers",
+            "m": "right"
+          }
+        ],
+        "story:2": [
+          {
+            "p": "{hero} teaching anatomy to students around a skeleton"
+          },
+          {
+            "p": "a surgeon setting a broken arm with wooden splints, assistant holding a lamp"
+          },
+          {
+            "p": "close-up of fine thread and a curved needle on a linen cloth",
+            "fact": [
+              "кетгут",
+              "нити для внутренних швов"
+            ]
+          }
+        ],
+        "story:3": [
+          {
+            "p": "medieval Toledo on a hill above the river at sunset",
+            "fx": "mist"
+          },
+          {
+            "p": "medieval surgeons in long robes studying a large illustrated book of surgical instruments in a 14th-century university hall, candlelight, no glasses",
+            "m": "right"
+          }
+        ],
+        "legacy": [
+          {
+            "p": "{hero} holding a scalpel in candlelight, determined gaze"
+          },
+          {
+            "p": "rows of medieval surgical instruments in a museum glass case",
+            "m": "right"
+          }
+        ]
+      }
+    },
+    "ibn-al-haytham": {
+      "hero": "an Arab scholar from Basra in his fifties with a dark greying beard, brown turban and dark robe",
+      "setting": "11th-century Fatimid Egypt",
+      "beats": {
+        "portrait": [
+          {
+            "p": "close-up portrait of {hero}, handsome dignified face, wise kind eyes, detailed natural skin texture, soft warm window light, looking into the camera",
+            "m": "push",
+            "fx": "dust"
+          }
+        ],
+        "intro": [
+          {
+            "p": "the port of Basra with wooden dhows and palm trees at sunset",
+            "fx": "mist"
+          },
+          {
+            "p": "portrait of {hero} in a dark room crossed by a single beam of light"
+          }
+        ],
+        "story:0": [
+          {
+            "p": "{hero} speaking confidently among scholars, raised hand"
+          },
+          {
+            "p": "a Fatimid caliph on a throne in a dark palace, menacing, guards",
+            "fx": "embers"
+          },
+          {
+            "p": "a messenger galloping across the desert towards Cairo, pyramids in the distance",
+            "m": "right"
+          }
+        ],
+        "story:1": [
+          {
+            "p": "a felucca sailing up the Nile past giant ancient Egyptian temple columns at sunset",
+            "fx": "mist",
+            "m": "right"
+          },
+          {
+            "p": "{hero} standing small before colossal ancient Egyptian statues, overwhelmed"
+          },
+          {
+            "p": "{hero} with dishevelled hair in a dim cell, pretending madness, guards watching"
+          }
+        ],
+        "story:2": [
+          {
+            "p": "a beam of sunlight entering a dark room through a small hole and projecting an upside-down image of palm trees on the wall",
+            "fact": [
+              "камера-обскура",
+              ""
+            ]
+          },
+          {
+            "p": "extreme close-up of a human eye reflecting a candle flame",
+            "fx": "none"
+          },
+          {
+            "p": "a glass sphere of water refracting light into a rainbow on a wooden table"
+          },
+          {
+            "p": "{hero} writing in a dark room lit by a single beam of light",
+            "fact": [
+              "«Книга оптики»",
+              "свет идёт от предмета к глазу"
+            ]
+          }
+        ],
+        "story:3": [
+          {
+            "p": "{hero} conducting an experiment with mirrors and candles"
+          },
+          {
+            "p": "an ancient brass model of the planets with nested rings, glowing",
+            "fx": "gold",
+            "m": "drift",
+            "fact": [
+              "«Сомнения относительно Птолемея»",
+              ""
+            ]
+          }
+        ],
+        "legend": [
+          {
+            "p": "silhouette of {hero} behind the iron bars of a window"
+          },
+          {
+            "p": "old manuscript biographies on a desk next to a candle"
+          }
+        ],
+        "legacy": [
+          {
+            "p": "a medieval friar in Oxford studying glass lenses and light",
+            "m": "right"
+          },
+          {
+            "p": "beams of light split by a glass prism into a rainbow in darkness",
+            "fx": "none",
+            "fact": [
+              "2015",
+              "Международный год света"
+            ]
+          }
+        ]
+      }
+    },
+    "al-biruni": {
+      "hero": "a Khwarezmian scholar in his forties with a dark beard, white turban and dark blue robe with gold trim",
+      "setting": "11th-century Central Asia",
+      "beats": {
+        "portrait": [
+          {
+            "p": "close-up portrait of {hero}, handsome dignified face, wise kind eyes, detailed natural skin texture, soft warm window light, looking into the camera",
+            "m": "push",
+            "fx": "dust"
+          }
+        ],
+        "intro": [
+          {
+            "p": "the ancient city of Kath in Khwarezm, mud-brick walls near the Amu Darya river, sunrise",
+            "fx": "mist"
+          },
+          {
+            "p": "portrait of {hero} holding a brass astrolabe on a mountain top at sunset"
+          }
+        ],
+        "story:0": [
+          {
+            "p": "a young Khwarezmian scholar in a white turban sealing a letter with red wax, candle, manuscripts",
+            "fact": [
+              "18 вопросов",
+              "к Ибн Сине"
+            ]
+          },
+          {
+            "p": "a messenger on horseback riding across the steppe carrying letters",
+            "m": "right"
+          }
+        ],
+        "story:1": [
+          {
+            "p": "Ghaznavid army with war elephants marching across a plain, banners, dust",
+            "m": "right"
+          },
+          {
+            "p": "a medieval fortress city in the mountains of Afghanistan",
+            "fx": "mist"
+          },
+          {
+            "p": "{hero} studying Sanskrit palm-leaf manuscripts with an Indian pandit in a temple"
+          },
+          {
+            "p": "an ancient Indian stone temple in the mountains at sunrise, pilgrims",
+            "fx": "mist",
+            "m": "rise"
+          }
+        ],
+        "story:2": [
+          {
+            "p": "ruins of a stone fort on a ridge of the Salt Range in Punjab, a vast plain below, golden hour",
+            "fx": "mist"
+          },
+          {
+            "p": "{hero} on the plain sighting a distant mountain peak through a brass astrolabe"
+          },
+          {
+            "p": "{hero} standing on a mountain summit looking at the horizon over an endless plain at sunset",
+            "fx": "mist",
+            "m": "pull"
+          },
+          {
+            "p": "close-up of a brass astrolabe with engraved scales, sunlight glint",
+            "fx": "gold",
+            "fact": [
+              "≈ 0°34′",
+              "угол понижения горизонта"
+            ]
+          }
+        ],
+        "story:3": [
+          {
+            "p": "planet Earth seen from space, sunrise over the curved horizon, thin blue atmosphere",
+            "fx": "stars",
+            "m": "drift",
+            "fact": [
+              "≈ 6340 км",
+              "радиус Земли у Бируни · сегодня ≈ 6371 км"
+            ]
+          },
+          {
+            "p": "{hero} writing calculations on parchment by candlelight, triumphant",
+            "fact": [
+              "< 1 %",
+              "ошибка"
+            ]
+          }
+        ],
+        "legend": [
+          {
+            "p": "an old dying scholar in bed by lamplight, a visitor sitting beside him, talking"
+          },
+          {
+            "p": "close-up of an old hand resting on a book, lamplight"
+          },
+          {
+            "p": "a man walking away along a dark night street with lanterns",
+            "m": "right"
+          }
+        ],
+        "legacy": [
+          {
+            "p": "the cratered far side of the Moon, stark sunlight, black space",
+            "fx": "stars",
+            "m": "drift",
+            "fact": [
+              "Аль-Бируни",
+              "кратер на обратной стороне Луны"
+            ]
+          },
+          {
+            "p": "an old book lying on a modern desk next to a laptop, warm light",
+            "fx": "none"
+          }
+        ]
+      }
+    },
+    "ibn-sina": {
+      "hero": "a Persian physician-philosopher in his forties with a black beard, white turban and richly embroidered dark robe",
+      "setting": "11th-century Persia",
+      "beats": {
+        "portrait": [
+          {
+            "p": "close-up portrait of {hero}, handsome dignified face, wise kind eyes, detailed natural skin texture, soft warm window light, looking into the camera",
+            "m": "push",
+            "fx": "dust"
+          }
+        ],
+        "intro": [
+          {
+            "p": "the brick Samanid mausoleum in Bukhara at sunrise, intricate brickwork",
+            "fx": "mist"
+          },
+          {
+            "p": "portrait of {hero} in a library, piercing intelligent gaze, candlelight"
+          }
+        ],
+        "story:0": [
+          {
+            "p": "a ten-year-old boy reading a large book in a madrasa, light from a window",
+            "fact": [
+              "10 лет",
+              ""
+            ]
+          },
+          {
+            "p": "a teenage boy teaching older physicians who listen attentively",
+            "fact": [
+              "16 лет",
+              "у него учатся врачи"
+            ]
+          },
+          {
+            "p": "a young man surrounded by piles of books at night, candlelight",
+            "m": "pull"
+          }
+        ],
+        "story:1": [
+          {
+            "p": "a Samanid emir lying ill on a royal bed, physicians around, dark palace room"
+          },
+          {
+            "p": "young {hero} taking the pulse of the ill emir"
+          },
+          {
+            "p": "a vast royal library with endless shelves of manuscripts, a young man in awe",
+            "m": "rise"
+          }
+        ],
+        "story:2": [
+          {
+            "p": "a lone rider with a camel crossing a vast desert at dusk",
+            "m": "right"
+          },
+          {
+            "p": "{hero} as a vizier at a royal court in Hamadan"
+          },
+          {
+            "p": "{hero} writing by candlelight in a stone fortress prison cell"
+          }
+        ],
+        "story:3": [
+          {
+            "p": "{hero} debating with students around a lamp at night"
+          },
+          {
+            "p": "five large leather-bound volumes of a medical encyclopedia on a table",
+            "fact": [
+              "«Канон врачебной науки»",
+              "5 томов"
+            ]
+          },
+          {
+            "p": "a stone mausoleum with a tall tower in Hamadan at dusk",
+            "fx": "mist",
+            "m": "rise"
+          }
+        ],
+        "legend": [
+          {
+            "p": "{hero} fleeing on horseback through a desert sandstorm at night",
+            "m": "right"
+          },
+          {
+            "p": "painters copying a portrait of a man, many copies on the floor"
+          },
+          {
+            "p": "soldiers in a city square holding up a portrait, searching",
+            "m": "left"
+          }
+        ],
+        "legacy": [
+          {
+            "p": "medieval European university lecture, a professor reading a huge medical book to students",
+            "m": "right"
+          },
+          {
+            "p": "an old Renaissance printed book open on a lectern, candlelight",
+            "fact": [
+              "до XVII века",
+              "учебник европейских университетов"
+            ]
+          }
+        ]
+      }
+    },
+    "omar-khayyam": {
+      "hero": "a Persian mathematician and poet in his forties with a dark beard, light turban and simple robe",
+      "setting": "11th-century Seljuk Persia",
+      "beats": {
+        "portrait": [
+          {
+            "p": "close-up portrait of {hero}, handsome dignified face, wise kind eyes, detailed natural skin texture, soft warm window light, looking into the camera",
+            "m": "push",
+            "fx": "dust"
+          }
+        ],
+        "intro": [
+          {
+            "p": "Nishapur in Khorasan at dawn, turquoise domes, gardens, mountains",
+            "fx": "mist"
+          },
+          {
+            "p": "portrait of {hero} in a rose garden at sunset with a book"
+          }
+        ],
+        "story:0": [
+          {
+            "p": "medieval Samarkand at sunrise, domes and city walls",
+            "fx": "mist"
+          },
+          {
+            "p": "{hero} drawing intersecting curves with a compass on a large parchment"
+          },
+          {
+            "p": "glowing golden geometric curves, a parabola and a circle crossing, drawn on dark parchment",
+            "fx": "gold",
+            "fact": [
+              "x³ + bx = c",
+              "кубические уравнения через конические сечения"
+            ]
+          }
+        ],
+        "story:1": [
+          {
+            "p": "a Seljuk sultan and his vizier in a palace in Isfahan"
+          },
+          {
+            "p": "a medieval observatory on a hill at night with large brass instruments",
+            "fx": "stars",
+            "m": "rise"
+          },
+          {
+            "p": "spring celebration of Nowruz, people with fires and blossoming trees at sunrise",
+            "fx": "embers",
+            "m": "right"
+          }
+        ],
+        "story:2": [
+          {
+            "p": "{hero} and astronomers around a table with tables of numbers and a brass celestial globe",
+            "fact": [
+              "1079",
+              "календарь Джалали"
+            ]
+          },
+          {
+            "p": "the sun rising over mountains on the spring equinox",
+            "fx": "mist",
+            "m": "pull",
+            "fact": [
+              "на 500 лет раньше",
+              "точность — как у григорианского"
+            ]
+          }
+        ],
+        "story:3": [
+          {
+            "p": "an assassin's dagger in shadow in a palace at night",
+            "fx": "embers"
+          },
+          {
+            "p": "older {hero} in a garden with a cup and a book of poems, falling rose petals"
+          },
+          {
+            "p": "a Victorian gentleman translating poetry at a desk in 1859 England",
+            "m": "right",
+            "fact": [
+              "1859",
+              "перевод Фицджеральда"
+            ]
+          }
+        ],
+        "legend": [
+          {
+            "p": "three teenage boys in a madrasa courtyard clasping hands, swearing an oath"
+          },
+          {
+            "p": "a mountain fortress on a crag in the mist, ominous",
+            "fx": "mist"
+          },
+          {
+            "p": "an old vizier and a young man standing side by side"
+          }
+        ],
+        "legacy": [
+          {
+            "p": "a festive Nowruz table with sprouts, apples and candles",
+            "fx": "none"
+          },
+          {
+            "p": "a book of poetry with Persian miniature illustrations open by candlelight"
+          }
+        ]
+      }
+    },
+    "al-jazari": {
+      "hero": "a Mesopotamian engineer in his fifties with a dark beard, turban and leather apron over his robe",
+      "setting": "12th-century Anatolia",
+      "beats": {
+        "portrait": [
+          {
+            "p": "close-up portrait of {hero}, handsome dignified face, wise kind eyes, detailed natural skin texture, soft warm window light, looking into the camera",
+            "m": "push",
+            "fx": "dust"
+          }
+        ],
+        "intro": [
+          {
+            "p": "black basalt city walls of Diyarbakir above the Tigris at sunset",
+            "fx": "mist"
+          },
+          {
+            "p": "portrait of {hero} in his workshop full of brass gears"
+          }
+        ],
+        "story:0": [
+          {
+            "p": "an Artuqid ruler on a throne in a stone palace hall"
+          },
+          {
+            "p": "{hero} in a workshop full of brass gears, water wheels and tools, sparks",
+            "fx": "embers",
+            "m": "right"
+          },
+          {
+            "p": "close-up of a hand drawing a mechanical diagram on parchment by candlelight",
+            "fact": [
+              "1206",
+              "«Книга знаний об остроумных механических устройствах»"
+            ]
+          }
+        ],
+        "story:1": [
+          {
+            "p": "a mechanical boat with four automaton musician figures floating on a palace pool"
+          },
+          {
+            "p": "an ornate brass automaton figure of a servant pouring water from a jug"
+          },
+          {
+            "p": "an intricate brass fountain with water jets in a palace garden",
+            "fx": "mist",
+            "m": "rise",
+            "fact": [
+              "50 устройств",
+              "в шести группах"
+            ]
+          }
+        ],
+        "story:2": [
+          {
+            "p": "the elephant clock of al-Jazari, a large elephant carrying an ornate tower with a dome, a phoenix on top, a mahout figure and golden dragons, palace courtyard",
+            "m": "pull"
+          },
+          {
+            "p": "close-up of a bowl slowly sinking in a water tank inside a mechanism"
+          },
+          {
+            "p": "a brass ball falling into the open mouth of a golden dragon",
+            "fx": "gold",
+            "fact": [
+              "каждые полчаса",
+              "свист, барабан, шар в пасть дракона"
+            ]
+          }
+        ],
+        "story:3": [
+          {
+            "p": "a medieval water-raising machine with a large wooden wheel and brass pistons beside a river",
+            "fx": "mist",
+            "m": "right"
+          },
+          {
+            "p": "close-up of a brass crank and piston mechanism, oiled metal glints",
+            "fx": "gold",
+            "fact": [
+              "вращение → поршни",
+              ""
+            ]
+          }
+        ],
+        "legacy": [
+          {
+            "p": "museum reconstructions of medieval brass automata",
+            "m": "right"
+          },
+          {
+            "p": "a giant ornate elephant clock in a modern shopping mall atrium, people looking",
+            "fx": "none"
+          }
+        ]
+      }
+    },
+    "nasir-ad-din-tusi": {
+      "hero": "a Persian astronomer in his fifties with a white beard, large white turban and dark robe",
+      "setting": "13th-century Persia",
+      "beats": {
+        "portrait": [
+          {
+            "p": "close-up portrait of {hero}, handsome dignified face, wise kind eyes, detailed natural skin texture, soft warm window light, looking into the camera",
+            "m": "push",
+            "fx": "dust"
+          }
+        ],
+        "intro": [
+          {
+            "p": "a 13th-century observatory complex with a domed tower on a hill at dusk",
+            "fx": "stars",
+            "m": "rise"
+          },
+          {
+            "p": "portrait of {hero} holding a brass astronomical instrument"
+          }
+        ],
+        "story:0": [
+          {
+            "p": "Mongol horsemen galloping across the steppe, dust, banners",
+            "m": "right"
+          },
+          {
+            "p": "a mountain fortress on top of a rocky crag above the clouds",
+            "fx": "mist"
+          },
+          {
+            "p": "{hero} writing in a fortress room with a narrow window overlooking mountains"
+          }
+        ],
+        "story:1": [
+          {
+            "p": "a Mongol khan in a tent with golden ornaments, {hero} bowing"
+          },
+          {
+            "p": "a besieged city burning at night, catapults, smoke",
+            "fx": "embers",
+            "m": "right"
+          }
+        ],
+        "story:2": [
+          {
+            "p": "construction of an observatory on a hill, workers carrying stones, 13th century",
+            "m": "right"
+          },
+          {
+            "p": "astronomers of different origins, including a Chinese scholar, measuring the stars with a large brass armillary sphere and a quadrant on an observatory terrace at night",
+            "fx": "stars"
+          },
+          {
+            "p": "close-up of columns of astronomical tables written on parchment, candlelight",
+            "fact": [
+              "«Ильханские таблицы»",
+              ""
+            ]
+          }
+        ],
+        "story:3": [
+          {
+            "p": "a glowing brass mechanical model of two circles rotating one inside the other",
+            "fx": "gold",
+            "m": "drift",
+            "fact": [
+              "пара Туси",
+              "два круга дают прямую"
+            ]
+          },
+          {
+            "p": "a Renaissance astronomer studying a manuscript diagram, 16th century"
+          },
+          {
+            "p": "golden triangles drawn on dark parchment with a compass and ruler",
+            "fact": [
+              "тригонометрия",
+              "становится отдельной наукой"
+            ]
+          }
+        ],
+        "legacy": [
+          {
+            "p": "star trails over the ruins of an observatory on a hill",
+            "fx": "stars",
+            "m": "pull"
+          },
+          {
+            "p": "{hero} looking up at the stars at night",
+            "fx": "stars"
+          }
+        ]
+      }
+    },
+    "ibn-an-nafis": {
+      "hero": "a Syrian physician in his forties with a dark beard, white turban and scholar's robe",
+      "setting": "13th-century Mamluk Egypt and Syria",
+      "beats": {
+        "portrait": [
+          {
+            "p": "close-up portrait of {hero}, handsome dignified face, wise kind eyes, detailed natural skin texture, soft warm window light, looking into the camera",
+            "m": "push",
+            "fx": "dust"
+          }
+        ],
+        "intro": [
+          {
+            "p": "old Damascus at dawn with the Umayyad mosque",
+            "fx": "mist"
+          },
+          {
+            "p": "portrait of {hero} in a hospital hall, lamplight"
+          }
+        ],
+        "story:0": [
+          {
+            "p": "courtyard of a medieval Damascus hospital with a fountain and a carved stone portal"
+          },
+          {
+            "p": "a grand Mamluk hospital complex in Cairo with domes, crowds",
+            "fx": "mist",
+            "m": "right"
+          }
+        ],
+        "story:1": [
+          {
+            "p": "{hero} reading a large medical book with a frown, candle"
+          },
+          {
+            "p": "realistic anatomical model of a human heart on a wooden table, dramatic light"
+          },
+          {
+            "p": "illuminated anatomy of a human heart and lungs with red and blue vessels, dark background",
+            "fx": "none",
+            "fact": [
+              "малый круг кровообращения",
+              "сердце → лёгкие → сердце"
+            ]
+          },
+          {
+            "p": "{hero} writing his conclusion, determined, candlelight"
+          }
+        ],
+        "story:2": [
+          {
+            "p": "16th-century European anatomist teaching in an anatomical theatre"
+          },
+          {
+            "p": "a 1920s library reading room, a young Egyptian doctor in a fez finding an old manuscript",
+            "fact": [
+              "1924",
+              "рукопись найдена в Берлине"
+            ]
+          },
+          {
+            "p": "an old manuscript page under a reading lamp"
+          }
+        ],
+        "story:3": [
+          {
+            "p": "{hero} handing books to hospital staff"
+          },
+          {
+            "p": "a library inside a medieval hospital, warm light",
+            "m": "right"
+          }
+        ],
+        "legacy": [
+          {
+            "p": "a 17th-century English physician demonstrating blood circulation to colleagues",
+            "m": "right"
+          },
+          {
+            "p": "portrait of {hero} in soft light"
+          }
+        ]
+      }
+    },
+    "al-kashi": {
+      "hero": "a Persian mathematician in his forties with a short dark beard, modest turban and worn robe",
+      "setting": "15th-century Timurid Samarkand",
+      "beats": {
+        "portrait": [
+          {
+            "p": "close-up portrait of {hero}, handsome dignified face, wise kind eyes, detailed natural skin texture, soft warm window light, looking into the camera",
+            "m": "push",
+            "fx": "dust"
+          }
+        ],
+        "intro": [
+          {
+            "p": "Registan square in Samarkand at sunset with a blue-tiled madrasa",
+            "fx": "mist"
+          },
+          {
+            "p": "portrait of {hero} with papers full of numbers"
+          }
+        ],
+        "story:0": [
+          {
+            "p": "{hero} as a poor traveller with a donkey on a dusty road",
+            "m": "right"
+          },
+          {
+            "p": "a magnificent blue-tiled portal in Samarkand, travellers entering",
+            "fx": "mist"
+          }
+        ],
+        "story:1": [
+          {
+            "p": "{hero} writing a letter by lamplight"
+          },
+          {
+            "p": "a lively debate of scholars in a blue-tiled madrasa courtyard",
+            "m": "right"
+          },
+          {
+            "p": "a young Timurid prince among scholars, calculating, attentive"
+          }
+        ],
+        "story:2": [
+          {
+            "p": "a perfect circle drawn with a compass on parchment with an inscribed polygon"
+          },
+          {
+            "p": "{hero} surrounded by pages of numbers late at night",
+            "m": "pull",
+            "fact": [
+              "π = 3,1415926535897932",
+              "16 знаков после запятой · 1424"
+            ]
+          },
+          {
+            "p": "a 16th-century Dutch mathematician at his desk",
+            "fact": [
+              "≈ 200 лет",
+              "держался рекорд"
+            ]
+          }
+        ],
+        "story:3": [
+          {
+            "p": "an arithmetic book open with columns of numbers, candle",
+            "fact": [
+              "«Ключ арифметики»",
+              "1427"
+            ]
+          },
+          {
+            "p": "construction of a large observatory in Samarkand, scaffolding, workers",
+            "m": "right"
+          },
+          {
+            "p": "a candle burning out on a desk covered with papers",
+            "fx": "embers"
+          }
+        ],
+        "legacy": [
+          {
+            "p": "portrait of {hero} in candlelight"
+          },
+          {
+            "p": "astronomical tables and calculation boards on a desk, warm light"
+          }
+        ]
+      }
+    },
+    "ulugbek": {
+      "hero": "Ulugh Beg, a Timurid prince-astronomer in his thirties with a thin moustache, small beard, Timurid crown hat and brocade robe",
+      "setting": "15th-century Timurid Samarkand",
+      "beats": {
+        "portrait": [
+          {
+            "p": "close-up portrait of {hero}, handsome dignified face, wise kind eyes, detailed natural skin texture, soft warm window light, looking into the camera",
+            "m": "push",
+            "fx": "dust"
+          }
+        ],
+        "intro": [
+          {
+            "p": "Registan square in Samarkand at sunset, blue domes and portals",
+            "fx": "mist"
+          },
+          {
+            "p": "portrait of {hero} in an observatory, starlight"
+          }
+        ],
+        "story:0": [
+          {
+            "p": "a vast Timurid army camp with thousands of tents on the steppe",
+            "m": "right"
+          },
+          {
+            "p": "an elderly fierce conqueror holding his infant grandson"
+          },
+          {
+            "p": "a teenage prince on a throne in Samarkand, courtiers bowing",
+            "fact": [
+              "15 лет",
+              "правитель Мавераннахра"
+            ]
+          }
+        ],
+        "story:1": [
+          {
+            "p": "a blue-tiled madrasa on the Registan with students in the courtyard",
+            "fx": "mist"
+          },
+          {
+            "p": "a round three-storey observatory building on a hill near Samarkand, 15th century",
+            "m": "rise"
+          },
+          {
+            "p": "inside the giant Fakhri sextant of Ulugh Beg in Samarkand: an enormous curved marble arc with brass rails descending steeply into a deep stone trench, astronomers in robes",
+            "m": "fall",
+            "fact": [
+              "≈ 40 м",
+              "радиус секстанта Фахри"
+            ]
+          }
+        ],
+        "story:2": [
+          {
+            "p": "the Milky Way over the Samarkand observatory, astronomers observing",
+            "fx": "stars",
+            "m": "rise",
+            "fact": [
+              "1018",
+              "звёзд в каталоге"
+            ]
+          },
+          {
+            "p": "{hero} writing star tables by candlelight"
+          },
+          {
+            "p": "the sun rising over the horizon of the steppe",
+            "fx": "mist",
+            "m": "pull",
+            "fact": [
+              "365 д 6 ч 10 мин 8 с",
+              "длина звёздного года"
+            ]
+          }
+        ],
+        "story:3": [
+          {
+            "p": "two Timurid armies clashing on a battlefield, dust",
+            "m": "right"
+          },
+          {
+            "p": "a lonely caravan of pilgrims in the desert at dusk, ominous",
+            "m": "right"
+          },
+          {
+            "p": "ruins of an observatory, scattered stones, night",
+            "fx": "embers"
+          },
+          {
+            "p": "an archaeologist in 1908 excavating a marble arc in the ground",
+            "fact": [
+              "1908",
+              "Вяткин находит секстант"
+            ]
+          }
+        ],
+        "legacy": [
+          {
+            "p": "a 17th-century Oxford library, a scholar with a printed book",
+            "m": "right"
+          },
+          {
+            "p": "underground remains of the marble arc of the Ulugh Beg sextant in Samarkand today"
+          }
+        ]
+      }
+    },
+    "ali-kushchi": {
+      "hero": "a Turkic astronomer in his fifties with a grey beard, white turban and blue robe",
+      "setting": "15th-century Timurid and Ottoman world",
+      "beats": {
+        "portrait": [
+          {
+            "p": "close-up portrait of {hero}, handsome dignified face, wise kind eyes, detailed natural skin texture, soft warm window light, looking into the camera",
+            "m": "push",
+            "fx": "dust"
+          }
+        ],
+        "intro": [
+          {
+            "p": "a falcon on a gloved hand against the blue domes of Samarkand"
+          },
+          {
+            "p": "portrait of {hero}, starlight"
+          }
+        ],
+        "story:0": [
+          {
+            "p": "a falconer releasing a falcon over the steppe, 15th century",
+            "m": "right"
+          },
+          {
+            "p": "a Timurid prince teaching a boy to use an astrolabe"
+          }
+        ],
+        "story:1": [
+          {
+            "p": "{hero} leading astronomers in the Samarkand observatory at night",
+            "fx": "stars"
+          },
+          {
+            "p": "a caravan leaving Samarkand at night",
+            "m": "right"
+          },
+          {
+            "p": "the court of a Turkmen ruler in Tabriz"
+          }
+        ],
+        "story:2": [
+          {
+            "p": "an Ottoman sultan in a palace receiving an envoy"
+          },
+          {
+            "p": "Hagia Sophia in Istanbul at sunset",
+            "fx": "mist"
+          },
+          {
+            "p": "a pile of silver Ottoman coins",
+            "fx": "gold",
+            "fact": [
+              "200 акче",
+              "в день"
+            ]
+          }
+        ],
+        "story:3": [
+          {
+            "p": "{hero} observing the night sky from a rooftop in Istanbul",
+            "fx": "stars"
+          },
+          {
+            "p": "the rotating Earth seen from space, terminator line",
+            "fx": "stars",
+            "m": "drift",
+            "fact": [
+              "Земля может вращаться?",
+              ""
+            ]
+          }
+        ],
+        "legend": [
+          {
+            "p": "phases of the Moon over a desert, multiple exposure",
+            "fx": "stars",
+            "m": "drift"
+          },
+          {
+            "p": "a young man kneeling and presenting a manuscript to a Timurid prince"
+          }
+        ],
+        "legacy": [
+          {
+            "p": "an Ottoman madrasa classroom, students with books",
+            "m": "right"
+          },
+          {
+            "p": "an old cemetery with cypress trees above the Golden Horn in Istanbul at dusk",
+            "fx": "mist"
+          }
+        ]
+      }
+    },
+    "taqi-al-din": {
+      "hero": "an Ottoman astronomer in his fifties with a grey beard, large white Ottoman turban and fur-lined robe",
+      "setting": "16th-century Ottoman Istanbul",
+      "beats": {
+        "portrait": [
+          {
+            "p": "close-up portrait of {hero}, handsome dignified face, wise kind eyes, detailed natural skin texture, soft warm window light, looking into the camera",
+            "m": "push",
+            "fx": "dust"
+          }
+        ],
+        "intro": [
+          {
+            "p": "16th-century Istanbul at dusk, the Bosphorus with sailing ships",
+            "fx": "mist"
+          },
+          {
+            "p": "portrait of {hero} with a brass mechanical clock"
+          }
+        ],
+        "story:0": [
+          {
+            "p": "a 16th-century Ottoman judge presiding over a court"
+          },
+          {
+            "p": "an intricate 16th-century brass mechanical clock with open gears",
+            "fx": "gold"
+          },
+          {
+            "p": "a meat spit rotated by a small steam turbine over a fire, kitchen",
+            "fx": "smoke",
+            "fact": [
+              "паровой вертел",
+              ""
+            ]
+          }
+        ],
+        "story:1": [
+          {
+            "p": "an Ottoman sultan on a throne in Topkapi palace"
+          },
+          {
+            "p": "Ottoman astronomers working with large instruments, a globe, clocks and books in an observatory",
+            "m": "right"
+          },
+          {
+            "p": "night over the Bosphorus with an observatory on a hill",
+            "fx": "stars",
+            "m": "rise",
+            "fact": [
+              "1577",
+              "обсерватория в Стамбуле"
+            ]
+          }
+        ],
+        "story:2": [
+          {
+            "p": "a great bright comet with a long glowing tail dominating the night sky over 16th-century Istanbul, domes and minarets, small oil lamps, no electric lights",
+            "fx": "stars",
+            "m": "rise"
+          },
+          {
+            "p": "Ottoman army in battle in the mountains, smoke",
+            "m": "right"
+          },
+          {
+            "p": "plague-stricken city streets at night, smoke, torches",
+            "fx": "smoke"
+          },
+          {
+            "p": "soldiers demolishing an observatory, dust and debris",
+            "fact": [
+              "1580",
+              "обсерваторию сносят"
+            ]
+          }
+        ],
+        "story:3": [
+          {
+            "p": "a 16th-century Danish astronomer with a ruff collar and fur cloak beside a great brass mural quadrant in his observatory, candlelight",
+            "m": "right"
+          },
+          {
+            "p": "close-up of a large brass quadrant instrument",
+            "fx": "gold"
+          }
+        ],
+        "legacy": [
+          {
+            "p": "an old illuminated Ottoman manuscript open on a table, candlelight"
+          },
+          {
+            "p": "{hero} under a starry sky",
+            "fx": "stars"
+          }
+        ]
+      }
+    }
+  },
+  "portrait": "close-up portrait of {hero}, handsome dignified face, wise kind eyes, detailed natural skin texture, soft warm window light, looking into the camera",
+  "face_negative": "deformed face, ugly, asymmetrical eyes, cross-eyed, distorted face, disfigured, extra eyes, bad teeth, plastic skin, cartoon"
+}

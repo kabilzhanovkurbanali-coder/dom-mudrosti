@@ -1,0 +1,9 @@
+# Кадры фильмов: Stable Diffusion XL (RealVisXL Lightning) и карты глубины (Depth Anything V2).
+torch>=2.4
+diffusers>=0.30
+transformers>=4.45
+accelerate
+huggingface-hub>=0.24,<2
+pillow
+numpy
+torchsde
