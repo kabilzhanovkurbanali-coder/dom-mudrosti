@@ -8,7 +8,7 @@ const darkStage = (opts = {}) => createStage({ background: 0x080c13, ambient: 0.
 
 // Parchment for the boards on which the methods are worked out.
 let parchmentMap;
-function parchment() {
+export function parchment() {
   if (parchmentMap) return parchmentMap;
   const c = document.createElement('canvas');
   c.width = c.height = 512;

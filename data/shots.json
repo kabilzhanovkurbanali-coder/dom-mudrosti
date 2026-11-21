@@ -1764,6 +1764,243 @@
           }
         ]
       }
+    },
+    "yusuf-balasaguni": {
+      "hero": "a Turkic poet and statesman of the Karakhanid court in his fifties with a dark greying beard, white turban and embroidered silk robe",
+      "setting": "11th-century Karakhanid Central Asia",
+      "beats": {
+        "portrait": [
+          {
+            "p": "close-up portrait of {hero}, handsome dignified face, wise kind eyes, detailed natural skin texture, soft warm window light, looking into the camera"
+          }
+        ],
+        "intro": [
+          {
+            "p": "the ancient brick Burana minaret standing in the green Chuy valley with snowy Tian Shan mountains behind, golden hour",
+            "fx": "mist"
+          }
+        ],
+        "story:0": [
+          {
+            "p": "a medieval walled city of mud brick with domes and a tall minaret in a wide green valley before snowy mountains, caravans on the road, morning light",
+            "m": "right",
+            "fx": "mist"
+          },
+          {
+            "p": "{hero} as a young man reading manuscripts in a madrasa courtyard with a fountain"
+          }
+        ],
+        "story:1": [
+          {
+            "p": "{hero} presenting a large illuminated manuscript to a Karakhanid khan on a carved throne in a palace hall, courtiers"
+          },
+          {
+            "p": "a khan placing a robe of honour on the shoulders of {hero} in a palace hall, courtiers watching",
+            "fact": [
+              "хас-хаджиб",
+              "почётный титул придворного советника"
+            ]
+          }
+        ],
+        "legacy": [
+          {
+            "p": "an old manuscript with lines of Uyghur script on parchment beside a candle, close-up"
+          },
+          {
+            "p": "students in a modern university library in Bishkek, snowy mountains outside the window",
+            "fx": "none",
+            "fact": [
+              "КНУ им. Ж. Баласагына",
+              "Бишкек"
+            ]
+          }
+        ]
+      }
+    },
+    "mahmud-kashgari": {
+      "hero": "a Turkic scholar of a noble Karakhanid family in his forties with a dark beard, white turban and travelling cloak",
+      "setting": "11th-century Central Asia",
+      "beats": {
+        "portrait": [
+          {
+            "p": "close-up portrait of {hero}, handsome dignified face, wise kind eyes, detailed natural skin texture, soft warm window light, looking into the camera"
+          }
+        ],
+        "intro": [
+          {
+            "p": "lake Issyk-Kul at sunrise, snowy Tian Shan peaks reflected in turquoise water, nomad yurts on the shore",
+            "fx": "mist"
+          }
+        ],
+        "story:0": [
+          {
+            "p": "{hero} on horseback with a small caravan crossing a high mountain pass in the Tian Shan",
+            "m": "right"
+          },
+          {
+            "p": "{hero} writing words in a notebook by a nomad campfire while elders tell stories, yurts at night",
+            "fx": "embers"
+          }
+        ],
+        "story:1": [
+          {
+            "p": "{hero} writing a large book in a library in Baghdad, scrolls and a hand-drawn round map on the table"
+          },
+          {
+            "p": "medieval Turkic nomads singing and playing a komuz around a fire, a scholar listening",
+            "fx": "embers"
+          }
+        ],
+        "story:3": [
+          {
+            "p": "an ancient manuscript with Arabic script and a round map drawing, open on a library table under soft light",
+            "fact": [
+              "1266",
+              "единственная рукопись"
+            ]
+          }
+        ],
+        "legacy": [
+          {
+            "p": "an old manuscript in a glass case in a quiet museum library",
+            "m": "right"
+          }
+        ]
+      }
+    },
+    "abu-nasr-mansur": {
+      "hero": "a Khwarezmian prince and mathematician in his forties with a short dark beard, jewelled turban and rich silk robe",
+      "setting": "10th-century Khwarezm, Central Asia",
+      "beats": {
+        "portrait": [
+          {
+            "p": "close-up portrait of {hero}, handsome dignified face, wise kind eyes, detailed natural skin texture, soft warm window light, looking into the camera"
+          }
+        ],
+        "intro": [
+          {
+            "p": "the walled city of Kath in Khwarezm on the Amu Darya at sunset, mud-brick towers",
+            "fx": "mist"
+          }
+        ],
+        "story:0": [
+          {
+            "p": "a young prince in a palace library studying a brass astrolabe and geometric diagrams by lamplight"
+          },
+          {
+            "p": "{hero} teaching a young student to use an astrolabe on a palace terrace at night",
+            "fx": "stars"
+          }
+        ],
+        "story:3": [
+          {
+            "p": "{hero} and a younger scholar studying manuscripts together by lamplight"
+          },
+          {
+            "p": "a caravan of scholars escorted by horsemen crossing the mountains towards Ghazni",
+            "m": "right"
+          }
+        ],
+        "legacy": [
+          {
+            "p": "a sailor on the deck of a wooden sailing ship at night holding up a small flat brass astrolabe disc to measure a star, starry sky, lantern",
+            "fx": "stars"
+          },
+          {
+            "p": "a modern airliner flying above the clouds at sunrise, the curve of the Earth below",
+            "fx": "none"
+          }
+        ]
+      }
+    },
+    "al-jawhari": {
+      "hero": "a Turkic scholar and lexicographer in his fifties with a grey beard, white turban and simple robe",
+      "setting": "10th-century Islamic world",
+      "beats": {
+        "portrait": [
+          {
+            "p": "close-up portrait of {hero}, handsome dignified face, wise kind eyes, detailed natural skin texture, soft warm window light, looking into the camera"
+          }
+        ],
+        "intro": [
+          {
+            "p": "the ruins of the ancient city of Otrar on the Syr Darya in the steppe at sunset, crumbling mud-brick walls",
+            "fx": "mist"
+          }
+        ],
+        "story:0": [
+          {
+            "p": "the Syr Darya river winding through the steppe past a mud-brick town, morning mist",
+            "m": "right",
+            "fx": "mist"
+          },
+          {
+            "p": "{hero} sitting with Bedouins in a tent in the Arabian desert, listening and writing words"
+          }
+        ],
+        "legacy": [
+          {
+            "p": "a huge old Arabic dictionary manuscript open on a wooden lectern in a library, candlelight",
+            "fact": [
+              "≈ 40 000",
+              "статей в словаре"
+            ]
+          },
+          {
+            "p": "{hero} writing at a desk covered with pages of words by candlelight"
+          }
+        ]
+      }
+    },
+    "haidar-dulati": {
+      "hero": "a Moghul nobleman, historian and warrior in his forties with a black beard, fur-trimmed cap and armour under a brocade robe",
+      "setting": "16th-century Central Asia",
+      "beats": {
+        "portrait": [
+          {
+            "p": "close-up portrait of {hero}, handsome dignified face, wise kind eyes, detailed natural skin texture, soft warm window light, looking into the camera"
+          }
+        ],
+        "intro": [
+          {
+            "p": "Tashkent in the 16th century, domes and minarets in a green oasis at sunrise",
+            "fx": "mist"
+          }
+        ],
+        "story:0": [
+          {
+            "p": "{hero} on horseback leading horsemen across the steppe toward the Tian Shan mountains, banners",
+            "m": "right"
+          }
+        ],
+        "story:1": [
+          {
+            "p": "the green valley of Kashmir with a lake and snowy Himalayan peaks, a stone fortress on a hill",
+            "fx": "mist"
+          }
+        ],
+        "story:2": [
+          {
+            "p": "{hero} writing a history book in a palace room by lamplight"
+          }
+        ],
+        "story:3": [
+          {
+            "p": "Kazakh nomads with yurts and herds of horses moving across a wide steppe valley under the mountains",
+            "m": "right"
+          }
+        ],
+        "legacy": [
+          {
+            "p": "a modern university building in Kazakhstan with students on the steps, sunny day",
+            "fx": "none",
+            "fact": [
+              "Тараз",
+              "университет им. М. Х. Дулати"
+            ]
+          }
+        ]
+      }
     }
   },
   "portrait": "close-up portrait of {hero}, handsome dignified face, wise kind eyes, detailed natural skin texture, soft warm window light, looking into the camera",

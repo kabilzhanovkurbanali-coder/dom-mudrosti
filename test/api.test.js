@@ -127,7 +127,7 @@ test('scholar detail has the story and chronological neighbours', async () => {
   assert.equal(body.scholar.name, 'Ибн Сина');
   assert.ok(body.scholar.story.paragraphs.length > 0);
   assert.equal(body.prev.slug, 'al-biruni');
-  assert.equal(body.next.slug, 'omar-khayyam');
+  assert.equal(body.next.slug, 'yusuf-balasaguni');
 
   const first = await get('/api/scholars/al-khwarizmi');
   assert.equal(first.body.prev, null);
@@ -197,6 +197,15 @@ test('a film is short: a hook, one or two discoveries in 3D, the legacy', async 
     assert.equal(b.timings, b.audio.replace('.mp3', '.json'));
   }
   assert.equal((await get('/api/scholars/nobody/film')).status, 404);
+});
+
+test('scholars of Central Asia: Kyrgyzstan, Kazakhstan, Uzbekistan', async () => {
+  for (const [country, min] of [['Кыргызстан', 2], ['Казахстан', 2], ['Узбекистан', 5]]) {
+    const { body } = await get(`/api/scholars?q=${encodeURIComponent(country)}`);
+    assert.ok(body.count >= min, `${country}: ${body.count}`);
+  }
+  const { body } = await get('/api/scholars/mahmud-kashgari/film');
+  assert.ok(body.beats.some((b) => b.shots.some((s) => s.scene === 'turkmap')));
 });
 
 test('every film shows a discovery as a 3D animation', async () => {

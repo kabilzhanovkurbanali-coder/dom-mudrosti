@@ -1,5 +1,6 @@
 import { title, journey, globe, moon, city, fortress, ruins, comet, court, library } from './world.js';
 import { earthMeasure, celestial, stars, orbitScene, observatory, tusi } from './sky.js';
+import { kutadgu, turkmap, sines, rhymes, wings } from './steppe.js';
 import { algebra, numerals, cipher, optics, nile, laboratory, heart, music, cubic, machine, pi } from './science.js';
 
 // Scene ids used in data/films.json.
@@ -31,4 +32,9 @@ export const SCENES = {
   cubic,
   machine,
   pi,
+  kutadgu,
+  turkmap,
+  sines,
+  rhymes,
+  wings,
 };
