@@ -1,9 +1,10 @@
-import { existsSync } from 'node:fs';
+import { existsSync, readdirSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { speechText } from './speech.js';
 
 const MEDIA_DIR = fileURLToPath(new URL('../public/media/shots', import.meta.url));
+const CAST_DIR = fileURLToPath(new URL('../public/media/cast', import.meta.url));
 
 export const CAMERA_MOVES = ['push', 'pull', 'left', 'right', 'rise', 'fall', 'drift'];
 export const PARTICLES = ['dust', 'embers', 'mist', 'stars', 'gold', 'smoke', 'none'];
@@ -100,13 +101,30 @@ function readyPhotos(names, board, slug, mediaDir) {
   });
 }
 
+// Realistic figures of a scholar for the 3D animations (tools/gen_presenters.py):
+// { point: '/media/cast/<slug>/point.webp', hold: …, walk: … }.
+export function castOf(slug, castDir = CAST_DIR) {
+  let files = [];
+  try {
+    files = readdirSync(path.join(castDir, slug));
+  } catch {
+    return {};
+  }
+  const poses = {};
+  for (const file of files.sort()) {
+    const m = /^([a-z]+)\.webp$/.exec(file);
+    if (m) poses[m[1]] = `/media/cast/${slug}/${file}`;
+  }
+  return poses;
+}
+
 // A part about a discovery: one picture sets the scene, then the 3D
 // animation shows how it was done and takes most of the time.
 // «animate: "only"» gives the whole part to the animation.
 export const ANIMATION_WEIGHT = 2.6;
-function withAnimation(photos, beat, who) {
-  // «who» tells the animation which scholar to dress its 3D figure as.
-  const animation = { scene: beat.scene, params: { ...(beat.params ?? {}), who }, weight: ANIMATION_WEIGHT };
+function withAnimation(photos, beat, who, cast) {
+  // «who» is the scholar of the film, «cast» his pictures for the 3D figure.
+  const animation = { scene: beat.scene, params: { ...(beat.params ?? {}), who, cast }, weight: ANIMATION_WEIGHT };
   return photos.length && beat.animate !== 'only' ? [{ ...photos[0], weight: 1 }, animation] : [animation];
 }
 
@@ -118,7 +136,7 @@ function defaultScript(scholar) {
   ];
 }
 
-export function buildFilms(content, scripts, narrator, { voiceover = {}, shots = {}, mediaDir = MEDIA_DIR } = {}) {
+export function buildFilms(content, scripts, narrator, { voiceover = {}, shots = {}, mediaDir = MEDIA_DIR, castDir = CAST_DIR } = {}) {
   const order = [...content.scholars].sort((a, b) => a.bornYear - b.bornYear);
   const films = new Map();
 
@@ -167,7 +185,7 @@ export function buildFilms(content, scripts, narrator, { voiceover = {}, shots =
       beats: voicedBeats.map((b) => {
         const { animate, photos: names, ...beat } = b;
         const photos = readyPhotos(names, board, s.slug, mediaDir);
-        return { ...beat, shots: animate ? withAnimation(photos, b, s.slug) : photos };
+        return { ...beat, shots: animate ? withAnimation(photos, b, s.slug, castOf(s.slug, castDir)) : photos };
       }),
     }));
   });

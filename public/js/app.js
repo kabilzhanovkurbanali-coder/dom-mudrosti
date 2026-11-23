@@ -103,10 +103,10 @@ function renderHome(params, token) {
       </svg>
       <div class="hero-shade" aria-hidden="true"></div>
       <div class="hero-content">
-        <p class="hero-eyebrow">VIII–XVI века · ${meta.total} учёных · ${meta.total} фильмов</p>
+        <p class="hero-eyebrow">VIII–XX века · ${meta.total} учёных и мыслителей · ${meta.total} фильмов</p>
         <h1 id="hero-title" class="hero-title" aria-label="Дом мудрости">${[...'Дом мудрости'].map((ch, i) => `<span style="--i:${i}" aria-hidden="true">${ch === ' ' ? '&nbsp;' : ch}</span>`).join('')}</h1>
-        <p class="hero-lead">Они измеряли Землю с вершины горы, взламывали шифры, вычисляли число π и строили часы-слона.
-          Короткие фильмы об учёных исламского мира — с 3D-анимациями их открытий.</p>
+        <p class="hero-lead">Они измеряли Землю с вершины горы, взламывали шифры, вычисляли число π, искали медь под степью и писали книги, которые прочитал весь мир.
+          Короткие фильмы об учёных исламского мира и Центральной Азии — с 3D-анимациями их открытий.</p>
         <div class="hero-buttons">
           <a class="hero-play" href="#/film/al-khwarizmi"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5z" fill="currentColor"/></svg>Смотреть первый фильм</a>
           <a class="hero-more" href="#list-title" data-scroll>Все учёные ↓</a>
@@ -114,7 +114,7 @@ function renderHome(params, token) {
         <dl class="hero-stats">
           <div><dt>учёных</dt><dd data-count="${meta.total}">0</dd></div>
           <div><dt>областей науки</dt><dd data-count="${meta.fields.length}">0</dd></div>
-          <div><dt>веков истории</dt><dd data-count="9">0</dd></div>
+          <div><dt>веков истории</dt><dd data-count="13">0</dd></div>
         </dl>
       </div>
       <a class="hero-scroll" href="#films-title" data-scroll aria-label="К фильмам"><span></span></a>
@@ -498,8 +498,8 @@ async function renderScholar(slug, token) {
 /* ---------- Хронология ---------- */
 
 const TL_START = 750;
-const TL_END = 1600;
-const TL_TICKS = [800, 900, 1000, 1100, 1200, 1300, 1400, 1500, 1600];
+const TL_END = 2025;
+const TL_TICKS = [800, 900, 1000, 1100, 1200, 1300, 1400, 1500, 1600, 1700, 1800, 1900, 2000];
 const pct = (year) => (((year - TL_START) / (TL_END - TL_START)) * 100).toFixed(3);
 
 function showTooltip(html, x, y) {
@@ -536,7 +536,7 @@ async function renderTimeline(token) {
   main.innerHTML = `
     <section class="page-head">
       <h1>Хронология</h1>
-      <p class="lead">Годы жизни учёных с VIII по XVI век. Видно, кто был современником, а кто читал книги предшественников спустя столетия.
+      <p class="lead">Годы жизни учёных и мыслителей с VIII по XX век. Видно, кто был современником, а кто читал книги предшественников спустя столетия.
         Наведите на полосу, чтобы увидеть подробности, нажмите — чтобы открыть рассказ.</p>
     </section>
 

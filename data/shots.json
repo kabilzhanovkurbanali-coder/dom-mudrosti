@@ -2001,6 +2001,249 @@
           }
         ]
       }
+    },
+    "alisher-navoi": {
+      "hero": "a Timurid poet and vizier in his forties with a short dark beard, white turban and green silk robe embroidered with gold",
+      "setting": "15th-century Timurid Herat",
+      "beats": {
+        "portrait": [
+          {
+            "p": "close-up portrait of {hero}, handsome dignified face, wise kind eyes, detailed natural skin texture, soft warm window light, looking into the camera"
+          }
+        ],
+        "intro": [
+          {
+            "p": "Herat at sunrise, turquoise domes and tall minarets of the Musalla complex above the city walls, gardens",
+            "fx": "mist"
+          }
+        ],
+        "story:0": [
+          {
+            "p": "{hero} as a young man walking with a young Timurid prince through a garden of Herat, courtiers behind",
+            "m": "right"
+          }
+        ],
+        "story:1": [
+          {
+            "p": "masons laying blue and turquoise tiles on a new madrasa in Herat, scaffolding, {hero} watching",
+            "fx": "dust"
+          }
+        ],
+        "story:2": [
+          {
+            "p": "{hero} writing poetry with a reed pen in a palace library at night, lamplight, stacks of manuscripts",
+            "fx": "embers"
+          },
+          {
+            "p": "a strong young man carving a channel through a rocky mountain with a pickaxe, a princess on horseback watching from below, legendary scene",
+            "m": "rise",
+            "fact": [
+              "«Хамса»",
+              "пять поэм · 1483–1485"
+            ]
+          }
+        ],
+        "legacy": [
+          {
+            "p": "the Alisher Navoi theatre of opera and ballet in Tashkent in the evening, warm lights, fountains, modern day",
+            "fx": "none",
+            "fact": [
+              "Ташкент",
+              "театр имени Навои"
+            ]
+          }
+        ]
+      }
+    },
+    "chokan-valikhanov": {
+      "hero": "a young Kazakh scholar of noble birth in his early twenties with a thin moustache, in a dark 19th-century officer's uniform",
+      "setting": "19th-century Kazakh steppe",
+      "likeness": false,
+      "beats": {
+        "portrait": [
+          {
+            "p": "a camel caravan crossing a high snowy pass of the Tian Shan mountains at dawn, travellers in robes, 19th century"
+          }
+        ],
+        "intro": [
+          {
+            "p": "a Kazakh aul of white yurts on the steppe beside a lake at sunrise, horses grazing, 19th century",
+            "fx": "mist"
+          }
+        ],
+        "story:0": [
+          {
+            "p": "a 19th-century stone cadet school building with columns in a Siberian town in winter, cadets in greatcoats, snow",
+            "fx": "dust"
+          }
+        ],
+        "story:1": [
+          {
+            "p": "an old Kyrgyz storyteller in a white felt hat reciting an epic poem inside a yurt, listeners around a fire, a young man in uniform writing in a notebook, seen from behind",
+            "fx": "embers"
+          },
+          {
+            "p": "the deep blue Issyk-Kul lake under snowy Tian Shan mountains, a rider on the shore, 19th century",
+            "m": "right",
+            "fx": "mist"
+          }
+        ],
+        "story:2": [
+          {
+            "p": "a merchant caravan of camels and horses descending toward the walled oasis city of Kashgar, 1858, dusty road, poplar trees",
+            "m": "push",
+            "fact": [
+              "Кашгар, 1858",
+              "под именем купца Алимбая"
+            ]
+          }
+        ],
+        "story:3": [
+          {
+            "p": "an old notebook with handwritten notes in Russian and pencil sketches of oriental streets and people, on a wooden table with an ink pot and a candle",
+            "fact": [
+              "«О состоянии Алтышара»",
+              "первое научное описание Кашгарии"
+            ]
+          }
+        ],
+        "legacy": [
+          {
+            "p": "the modern city of Kokshetau in Kazakhstan beside a lake with pine forest and hills, sunny day",
+            "fx": "none",
+            "fact": [
+              "Кокшетау",
+              "университет имени Ш. Уалиханова"
+            ]
+          }
+        ]
+      }
+    },
+    "kanysh-satbayev": {
+      "hero": "a Kazakh geologist in his thirties in a 1930s field jacket and cap",
+      "setting": "Soviet Kazakhstan",
+      "likeness": false,
+      "beats": {
+        "portrait": [
+          {
+            "p": "a geologist's field table in the steppe at golden hour: a rock hammer, a brass compass, rock samples with green copper ore, an old hand-drawn map, 1930s"
+          }
+        ],
+        "intro": [
+          {
+            "p": "the endless steppe of Central Kazakhstan at sunrise, low hills, dry grass, a dirt road, 1920s",
+            "fx": "mist"
+          }
+        ],
+        "story:0": [
+          {
+            "p": "the granite rocks, pine trees and mountain lake of Bayanaul in Kazakhstan, early 20th century",
+            "m": "right",
+            "fx": "mist"
+          }
+        ],
+        "story:1": [
+          {
+            "p": "old abandoned copper mine pits in the Kazakh steppe, green malachite stains on the rocks, a horse cart nearby, 1920s",
+            "fx": "dust"
+          }
+        ],
+        "story:2": [
+          {
+            "p": "a 1930s wooden drilling rig in the Kazakh steppe, workers pulling up a rock core, a geologist examining it",
+            "fx": "dust"
+          }
+        ],
+        "story:3": [
+          {
+            "p": "a 1940s manganese mine in the Kazakh steppe, workers and old trucks, wartime",
+            "fx": "smoke"
+          },
+          {
+            "p": "a monumental building with columns of the Academy of Sciences in Almaty, 1950s, snowy mountains behind, trees",
+            "fx": "none",
+            "fact": [
+              "1946",
+              "Академия наук Казахстана"
+            ]
+          }
+        ],
+        "legacy": [
+          {
+            "p": "molten copper being poured at a modern copper smelter, bright orange glow, sparks",
+            "fx": "embers",
+            "fact": [
+              "Жезказган",
+              "одно из крупнейших месторождений меди"
+            ]
+          }
+        ]
+      }
+    },
+    "chingiz-aitmatov": {
+      "hero": "a Kyrgyz writer",
+      "setting": "Kyrgyzstan",
+      "likeness": false,
+      "beats": {
+        "portrait": [
+          {
+            "p": "a lone tall poplar tree on a hill in the Talas valley of Kyrgyzstan at golden hour, snowy mountains behind, wind"
+          }
+        ],
+        "intro": [
+          {
+            "p": "a small village with adobe houses and rows of poplar trees in the Talas valley of Kyrgyzstan under the snowy Ala-Too mountains, 1930s",
+            "fx": "mist"
+          }
+        ],
+        "story:0": [
+          {
+            "p": "an old Kyrgyz grandmother telling a fairy tale to a small boy by the fire in a village house, 1930s, warm light",
+            "fx": "embers"
+          }
+        ],
+        "story:1": [
+          {
+            "p": "a teenage boy seen from behind writing at a wooden desk in a village council office in the 1940s, a kerosene lamp, papers",
+            "fx": "dust"
+          }
+        ],
+        "story:2": [
+          {
+            "p": "a young Kyrgyz woman in a red headscarf driving a horse-drawn cart loaded with grain sacks along a steppe road at sunset, 1940s",
+            "m": "right"
+          },
+          {
+            "p": "a young man and a young woman walking away along a road across the steppe at dusk, seen from behind, mountains in the distance",
+            "fx": "mist",
+            "fact": [
+              "«Джамиля», 1958",
+              "«самая прекрасная повесть о любви»"
+            ]
+          }
+        ],
+        "story:3": [
+          {
+            "p": "a lonely camel herder in old Turkic clothes standing in the vast Sary-Ozek steppe under a burning sun, a herd of camels, legend",
+            "fx": "dust"
+          },
+          {
+            "p": "an old woman on a white camel searching the endless steppe at dusk, wind and dust, legend",
+            "m": "right",
+            "fx": "dust"
+          }
+        ],
+        "legacy": [
+          {
+            "p": "the Ata-Beyit memorial in the foothills near Bishkek, a stone monument among trees, autumn, mountains",
+            "fx": "none",
+            "fact": [
+              "Ата-Бейит",
+              "мемориал под Бишкеком"
+            ]
+          }
+        ]
+      }
     }
   },
   "portrait": "close-up portrait of {hero}, handsome dignified face, wise kind eyes, detailed natural skin texture, soft warm window light, looking into the camera",

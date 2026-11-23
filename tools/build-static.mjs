@@ -44,7 +44,9 @@ await rm(DIST, { recursive: true, force: true });
 // and without anything that is not part of the site.
 await cp(PUBLIC, DIST, {
   recursive: true,
-  filter: (src) => !src.startsWith(SHOTS) && !src.endsWith('.mp4') && !src.endsWith('.DS_Store'),
+  // Of the scholars' figures only the cut-outs are needed (not their sources).
+  filter: (src) =>
+    !src.startsWith(SHOTS) && !src.endsWith('.mp4') && !src.endsWith('.DS_Store') && !src.endsWith('.src.jpg') && !src.endsWith('manifest.json'),
 });
 await mkdir(path.join(DIST, 'vendor', 'three'), { recursive: true });
 await copyFile(path.join(ROOT, 'node_modules', 'three', 'build', 'three.module.js'), path.join(DIST, 'vendor', 'three', 'three.module.js'));

@@ -6,6 +6,7 @@ import {
   THREE, createStage, label, fade, glow, starfield, dust, rod, stage, smooth, lerp, clamp, rng, skyDome,
 } from '../kit.js';
 import { createFigure, alongPath } from '../figure.js';
+import { createActor, screenFacing } from '../actor.js';
 
 const MOUNT = new THREE.Vector2(0, -40); // x, z of the summit
 const PEAK = 22;
@@ -129,9 +130,19 @@ export function biruniMeasure({ params = {}, ctx }) {
   const motes = dust(200, [30, 8, 30], 0xfff0d8, 3);
   land.add(motes);
 
-  // Al-Biruni with his astrolabe.
-  const biruni = createFigure(params.who ?? 'al-biruni', { prop: 'astrolabe' });
+  // Al-Biruni with his astrolabe: a realistic figure (photos of him walking,
+  // sighting with the astrolabe and standing on the summit); the simple 3D
+  // figure only while those pictures are not drawn yet.
+  const poses = params.cast ?? {};
+  const actor = poses.walk && poses.sight ? createActor(poses, { height: 1.85 }) : null;
+  const biruni = actor ?? createFigure(params.who ?? 'al-biruni', { prop: 'astrolabe' });
   scene.add(biruni.root);
+  // What he does: a pose of the photos or of the 3D figure, and where he faces.
+  const DO = { walk: 'down', sight: 'sight', summit: 'sight' };
+  const act = (what, walking, toward, look) => {
+    if (actor) actor.pose(what).set({ walking, face: screenFacing(camera, toward) });
+    else biruni.set({ walk: walking, right: DO[what], look });
+  };
   const eye = (pos) => pos.clone().add(new THREE.Vector3(0, 1.62, 0));
 
   const S = new THREE.Vector3(MOUNT.x, groundHeight(MOUNT.x, MOUNT.y), MOUNT.y);
@@ -240,48 +251,53 @@ export function biruniMeasure({ params = {}, ctx }) {
       // ---- Where he is and what he does.
       let pos;
       let yaw;
+      const flat = (a, b) => new THREE.Vector3(b.x - a.x, 0, b.z - a.z).normalize();
       if (p < 0.22) {
         const u = stage(p, 0.03, 0.2);
         pos = start.clone().lerp(A, u);
         yaw = Math.atan2(A.x - start.x, A.z - start.z);
-        biruni.set({ walk: u > 0 && u < 1 ? 1 : 0, right: 'down', look: S });
+        act(u > 0 && u < 1 ? 'walk' : 'sight', u > 0 && u < 1 ? 1 : 0, flat(start, A), S);
       } else if (p < 0.29) {
         pos = A.clone();
         yaw = Math.atan2(S.x - A.x, S.z - A.z);
-        biruni.set({ walk: 0, right: 'sight', look: S });
+        act('sight', 0, flat(A, S), S);
       } else if (p < 0.35) {
         const u = stage(p, 0.29, 0.345);
         pos = A.clone().lerp(B, u);
         yaw = Math.atan2(B.x - A.x, B.z - A.z);
-        biruni.set({ walk: 1, right: 'down', look: S });
+        act('walk', 1, flat(A, B), S);
       } else if (p < 0.46) {
         pos = B.clone();
         yaw = Math.atan2(S.x - B.x, S.z - B.z);
-        biruni.set({ walk: 0, right: p < 0.42 ? 'sight' : 'hold', look: S });
+        act('sight', 0, flat(B, S), S);
       } else if (p < 0.59) {
         const step = alongPath(climb, stage(p, 0.46, 0.585));
         pos = step.position;
         pos.y = groundHeight(pos.x, pos.z);
         yaw = step.yaw;
-        biruni.set({ walk: 1.25, right: 'down', look: null });
+        act('walk', 1.25, new THREE.Vector3(Math.sin(yaw), 0, Math.cos(yaw)), null);
       } else {
         pos = top.clone();
         yaw = Math.PI / 2; // facing east, over the plain
-        biruni.set({ walk: 0, right: p > 0.63 ? 'sight' : 'hold', look: top.clone().add(new THREE.Vector3(30, 0.5, 0)) });
+        act('summit', 0, new THREE.Vector3(1, 0, 0), top.clone().add(new THREE.Vector3(30, 0.5, 0)));
       }
       biruni.root.position.copy(pos);
-      biruni.root.rotation.y = yaw;
-      biruni.update(t, dt);
+      if (!actor) {
+        biruni.root.rotation.y = yaw;
+        biruni.update(t, dt);
+      }
 
       // ---- Lines and labels.
       const showA = stage(p, 0.235, 0.26) * (1 - stage(p, 0.46, 0.5));
-      setBeam(sightA, eye(A), S);
+      // The beams start a little in front of his face, so they do not cover it.
+      const ahead = (from) => eye(from).lerp(S, 0.6 / eye(from).distanceTo(S));
+      setBeam(sightA, ahead(A), S);
       sightA.material.opacity = showA;
       sightA.visible = showA > 0.01;
       tagA.position.copy(eye(A).lerp(S, 0.35)).add(new THREE.Vector3(2.2, 0.8, 0));
       fade(tagA, showA);
       const showB = stage(p, 0.37, 0.4) * (1 - stage(p, 0.46, 0.5));
-      setBeam(sightB, eye(B), S);
+      setBeam(sightB, ahead(B), S);
       sightB.material.opacity = showB;
       sightB.visible = showB > 0.01;
       tagB.position.copy(eye(B).lerp(S, 0.45)).add(new THREE.Vector3(2.2, 0.8, 0));
@@ -316,13 +332,18 @@ export function biruniMeasure({ params = {}, ctx }) {
       scene.background.set(inSpace ? 0x04060c : 0xa9b9c6);
       if (!inSpace) {
         const wide = { pos: new THREE.Vector3(20, 4.5, 34), look: new THREE.Vector3(2, 8, -30) };
-        const shoulder = {
-          pos: pos.clone().add(new THREE.Vector3(4.2, 2.3, 8.5)),
-          look: lerpV(pos.clone().add(new THREE.Vector3(0, 2.4, 0)), S, 0.1),
-        };
+        // From his side: he is on the left, the mountain on the right.
+        const toS = new THREE.Vector3(S.x - pos.x, 0, S.z - pos.z).normalize();
+        const sideways = new THREE.Vector3(-toS.z, 0, toS.x);
+        // Far enough back to hold both him and the summit, looking between them.
+        const shoulderPos = pos.clone().addScaledVector(sideways, 6).addScaledVector(toS, -8).add(new THREE.Vector3(0, 1.7, 0));
+        const toMan = pos.clone().add(new THREE.Vector3(0, 0.9, 0)).sub(shoulderPos).normalize();
+        const toTopS = S.clone().sub(shoulderPos).normalize();
+        const shoulder = { pos: shoulderPos, look: shoulderPos.clone().addScaledVector(toMan.add(toTopS).normalize(), 10) };
+        const toTop = new THREE.Vector3(top.x - pos.x, 0, top.z - pos.z).normalize();
         const follow = {
-          pos: pos.clone().add(new THREE.Vector3(7, 3.5, 6)),
-          look: pos.clone().add(new THREE.Vector3(0, 1.4, 0)),
+          pos: pos.clone().addScaledVector(new THREE.Vector3(-toTop.z, 0, toTop.x), 7).addScaledVector(toTop, -3).add(new THREE.Vector3(0, 3, 0)),
+          look: pos.clone().addScaledVector(toTop, 2).add(new THREE.Vector3(0, 1.3, 0)),
         };
         const summit = {
           pos: top.clone().add(new THREE.Vector3(-3.2, 2.4, 5.8)),
@@ -340,6 +361,7 @@ export function biruniMeasure({ params = {}, ctx }) {
         // The sun's shadow follows him.
         sun.position.copy(pos).add(new THREE.Vector3(-18, 26, 10));
         sun.target.position.copy(pos);
+        if (actor) actor.update(t, dt, camera);
       } else {
         const u = stage(p, 0.79, 1);
         space.updateMatrixWorld();

@@ -7,6 +7,7 @@ import {
 } from '../kit.js';
 import { parchment } from './science.js';
 import { createFigure } from '../figure.js';
+import { createActor } from '../actor.js';
 
 const warmStage = (opts = {}) => createStage({ background: 0x120d08, ambient: 0.35, sun: 0.9, ...opts });
 
@@ -543,16 +544,19 @@ export function wings({ params = {} } = {}) {
   ground.position.y = -6;
   scene.add(ground);
 
-  // Al-Jawhari with two wooden panels tied to his arms.
-  const jawhari = createFigure(params.who ?? 'al-jawhari');
+  // Al-Jawhari with two wooden panels tied to his arms: a realistic figure
+  // (his photo with the wings), or the simple 3D one with boards.
+  const photo = params.cast?.wings;
+  const actor = photo ? createActor({ wings: photo }, { height: 1.4, shadow: false }) : null;
+  const jawhari = actor ?? createFigure(params.who ?? 'al-jawhari');
   const man = jawhari.root;
-  man.scale.setScalar(0.75);
+  if (!actor) man.scale.setScalar(0.75);
   const board = new THREE.MeshStandardMaterial({ color: 0x8a5a30, roughness: 0.8 });
   const wingL = new THREE.Mesh(new THREE.BoxGeometry(1.0, 0.05, 0.5), board);
   const wingR = wingL.clone();
   wingL.position.set(-0.75, 1.3, 0);
   wingR.position.set(0.75, 1.3, 0);
-  man.add(wingL, wingR);
+  if (!actor) man.add(wingL, wingR);
   man.position.set(-1, 0, 0);
   scene.add(man);
 
@@ -627,9 +631,12 @@ export function wings({ params = {} } = {}) {
       const flap = Math.sin(t * 10) * 0.35 * jump * (1 - fall);
       wingL.rotation.z = flap;
       wingR.rotation.z = -flap;
-      jawhari.set({ walk: 0, left: 'gesture', right: 'gesture' });
-      jawhari.update(t, dt);
-      fade(man, 1 - stage(p, 0.74, 0.8));
+      let visible = 1 - stage(p, 0.74, 0.8);
+      if (!actor) {
+        jawhari.set({ walk: 0, left: 'gesture', right: 'gesture' });
+        jawhari.update(t, dt);
+        fade(man, visible);
+      }
       const forces = stage(p, 0.5, 0.56) * (1 - stage(p, 0.68, 0.72));
       const center = man.position.clone().add(new THREE.Vector3(0, 0.6, 0.4));
       setArrow(weight, center, -2.6);
@@ -644,13 +651,19 @@ export function wings({ params = {} } = {}) {
         // Show the small boards next to the big wing.
         man.position.set(1.2, 0, 0);
         man.rotation.z = 0;
-        fade(man, compare);
+        visible = compare;
+        if (!actor) fade(man, compare);
         wingL.rotation.z = 0;
         wingR.rotation.z = 0;
       }
       title.sprite.position.set(1, 4.2, 0);
       camera.position.set(lerp(2, 3.5, smooth(p)) + Math.sin(t * 0.1), 1.4, fitDistance(camera, compare > 0 ? 6.4 : 4.4));
       camera.lookAt(1.2, 0.4, 0);
+      if (actor) {
+        // The photo has no moving wings: he rocks and lifts a little with each «flap».
+        man.position.y += Math.abs(Math.sin(t * 10)) * 0.08 * jump * (1 - fall);
+        actor.update(t, dt, camera, { appear: visible });
+      }
     },
   };
 }

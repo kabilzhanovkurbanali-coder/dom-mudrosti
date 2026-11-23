@@ -224,8 +224,8 @@ export function createPost(renderer) {
       u.uLeak.value = leak;
       u.uBlack.value = black;
       u.uGrain.value = 0.03;
-      // Photos get the crisping, the 3D animations are sharp already.
-      u.uSharpen.value = toneA ? 0.15 : 0.45;
+      // A light crisping only: stronger sharpening drew halos around faces.
+      u.uSharpen.value = toneA ? 0.12 : 0.18;
       pass(composite, null);
     },
 

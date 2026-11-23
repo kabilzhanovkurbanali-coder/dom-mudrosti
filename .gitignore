@@ -16,3 +16,7 @@ dist/
 public/*.mp4
 .DS_Store
 public/media/shots/**/*.v[0-9].jpg
+.build/
+public/media/cast/**/*.src.jpg
+__pycache__/
+public/media/cast/**/*.tmp

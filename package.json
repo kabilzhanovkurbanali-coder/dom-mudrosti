@@ -11,6 +11,8 @@
     "narration": "node --disable-warning=ExperimentalWarning server/narrate-all.js",
     "setup": "python3 -m venv .venv && .venv/bin/pip install -r tools/requirements.txt",
     "setup:shots": "python3 -m venv .venv && .venv/bin/pip install -r tools/requirements-shots.txt",
+    "faces": ".venv/bin/python tools/refine.py",
+    "cast": ".venv/bin/python tools/gen_presenters.py",
     "shots": ".venv/bin/python tools/gen_shots.py",
     "deploy": "npm run build:static && wrangler deploy",
     "preview": "npm run build:static && wrangler dev",

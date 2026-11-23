@@ -2,6 +2,7 @@ import { title, journey, globe, moon, city, fortress, ruins, comet, court, libra
 import { earthMeasure, celestial, stars, orbitScene, observatory, tusi } from './sky.js';
 import { biruniMeasure } from './biruni.js';
 import { kutadgu, turkmap, sines, rhymes, wings } from './steppe.js';
+import { navoiScales, ore, translations } from './modern.js';
 import { algebra, numerals, cipher, optics, nile, laboratory, heart, music, cubic, machine, pi } from './science.js';
 
 // Scene ids used in data/films.json.
@@ -39,4 +40,7 @@ export const SCENES = {
   sines,
   rhymes,
   wings,
+  'navoi-scales': navoiScales,
+  ore,
+  translations,
 };

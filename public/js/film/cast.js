@@ -1,35 +1,37 @@
-// The scholar presents his discovery: a 3D figure at the side of the frame,
-// drawn in its own layer over the animation (so parts of the scene never
-// cut through him), turning to the discovery and gesturing at it.
+// The scholar presents his discovery: a realistic figure of him (a photo
+// cut out of its background, see actor.js) stands at the side of the frame,
+// from the knees up, in a layer of its own over the animation, and points
+// at the discovery or holds his instrument.
 import { THREE, clamp } from './kit.js';
-import { createFigure } from './figure.js';
+import { createActor } from './actor.js';
 
-// How each animation is presented: side of the frame, hand actions, prop.
+// How each animation is presented: side of the frame and pose.
 // Scenes that show the scholar inside the scene itself are left out.
 const CAST = {
-  algebra: { side: 'right', right: 'point', left: 'down' },
-  numerals: { side: 'left', right: 'gesture' },
-  cipher: { side: 'left', right: 'point', prop: 'quill', propSide: -1, left: 'write' },
-  optics: { side: 'right', right: 'gesture' },
-  nile: { side: 'left', right: 'point' },
-  laboratory: { side: 'left', right: 'work', left: 'work' },
-  heart: { side: 'left', right: 'point' },
-  music: { side: 'left', right: 'work', left: 'work' },
-  cubic: { side: 'right', right: 'hold', prop: 'compass' },
-  machine: { side: 'left', right: 'gesture' },
-  pi: { side: 'left', right: 'hold', prop: 'compass' },
-  celestial: { side: 'left', right: 'point' },
-  stars: { side: 'left', right: 'sight', prop: 'astrolabe', look: 'up' },
-  orbit: { side: 'left', right: 'point' },
-  observatory: { side: 'left', right: 'gesture' },
-  tusi: { side: 'left', right: 'point' },
-  globe: { side: 'left', right: 'point' },
-  moon: { side: 'left', right: 'point' },
-  comet: { side: 'left', right: 'point', look: 'up' },
-  kutadgu: { side: 'left', right: 'present', left: 'present', prop: 'book' },
-  turkmap: { side: 'left', right: 'point', prop: 'scroll', propSide: -1, left: 'hold' },
-  sines: { side: 'left', right: 'point' },
-  rhymes: { side: 'left', right: 'work', left: 'hold', prop: 'book', propSide: -1 },
+  algebra: { side: 'right', pose: 'point' },
+  numerals: { side: 'left', pose: 'hold' },
+  cipher: { side: 'left', pose: 'hold' },
+  optics: { side: 'right', pose: 'hold' },
+  nile: { side: 'left', pose: 'point' },
+  laboratory: { side: 'left', pose: 'hold' },
+  heart: { side: 'left', pose: 'point' },
+  music: { side: 'left', pose: 'hold' },
+  cubic: { side: 'right', pose: 'hold' },
+  machine: { side: 'left', pose: 'point' },
+  pi: { side: 'left', pose: 'hold' },
+  celestial: { side: 'left', pose: 'point' },
+  stars: { side: 'left', pose: 'hold' },
+  orbit: { side: 'left', pose: 'point' },
+  observatory: { side: 'left', pose: 'point' },
+  tusi: { side: 'left', pose: 'point' },
+  globe: { side: 'left', pose: 'point' },
+  moon: { side: 'left', pose: 'point' },
+  comet: { side: 'left', pose: 'point' },
+  kutadgu: { side: 'left', pose: 'hold' },
+  turkmap: { side: 'left', pose: 'point' },
+  sines: { side: 'left', pose: 'point' },
+  rhymes: { side: 'left', pose: 'hold' },
+  'navoi-scales': { side: 'left', pose: 'hold' },
 };
 
 export function presenterFor(sceneId) {
@@ -37,61 +39,49 @@ export function presenterFor(sceneId) {
 }
 
 // Adds the presenter to a scene object { scene, camera, update }.
+// params.cast holds the pictures of the scholar: { point: url, hold: url }.
 export function addPresenter(obj, sceneId, params = {}) {
   const cast = CAST[sceneId];
-  // Scenes with the scholar inside them need no presenter.
-  if (!cast || params.presenter === false || obj.ownFigure) return obj;
-  const figure = createFigure(params.who ?? 'default');
-  if (cast.prop) figure.hold(cast.prop, cast.propSide ?? 1);
+  const poses = params.cast ?? {};
+  // Scenes with the scholar inside them, or no pictures of him yet: no presenter.
+  if (!cast || params.presenter === false || obj.ownFigure || !Object.keys(poses).length) return obj;
+  // From the knees up, the lower edge fading out.
+  const actor = createActor(poses, { height: 1, cutBottom: 0.12, shadow: false, crop: 'knees' });
+  actor.pose(poses[cast.pose] ? cast.pose : Object.keys(poses)[0]);
+  const side = cast.side === 'right' ? 1 : -1;
+  // The photos face to the right: on the right side he is mirrored to face the middle.
+  actor.set({ face: -side });
+  // Night and space scenes light him less brightly than a sunlit room.
+  const bg = obj.scene.background?.isColor ? obj.scene.background : null;
+  const lum = bg ? 0.2126 * bg.r + 0.7152 * bg.g + 0.0722 * bg.b : 0.3;
+  actor.tint(new THREE.Color().setScalar(0.86 + Math.min(lum, 0.5) * 0.28));
 
-  // A layer of its own with a warm key light and a cool rim light.
   const layer = new THREE.Scene();
-  const key = new THREE.DirectionalLight(0xffe2b8, 2.4);
-  key.position.set(2, 3, 4);
-  const rim = new THREE.DirectionalLight(0x9fc4ff, 1.4);
-  rim.position.set(-3, 2, -3);
-  layer.add(new THREE.HemisphereLight(0xfff1dc, 0x2a2018, 0.9), key, rim);
-  const holder = new THREE.Group();
-  holder.add(figure.root);
-  layer.add(holder);
-  figure.root.traverse((o) => {
-    if (o.isMesh) o.castShadow = false;
-  });
-
-  const camLocal = new THREE.Vector3();
-  const look = new THREE.Vector3();
+  layer.add(actor.root);
+  const local = new THREE.Vector3();
   const inner = obj.update?.bind(obj);
   obj.overlay = layer;
   obj.update = (frame) => {
     inner?.(frame);
     const { camera } = obj;
     camera.updateMatrixWorld();
-    // Stand at the side of the frame, from the knees up, about two thirds of its height.
     const depth = 6;
     const hh = depth * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
     const hw = hh * camera.aspect;
-    const side = cast.side === 'right' ? 1 : -1;
+    // The engine draws the 3D scenes a little higher (setViewOffset): find
+    // the real bottom of the visible frame.
+    const shift = camera.view?.enabled ? camera.view.offsetY / camera.view.fullHeight : 0;
+    const bottom = -hh * (1 + 2 * shift);
     const narrow = camera.aspect < 1;
-    const scale = (hh * 2 * (narrow ? 0.46 : 0.62)) / 1.8;
-    camLocal.set(side * hw * (narrow ? 0.66 : 0.8), -hh * (narrow ? 0.92 : 1.0), -depth);
-    holder.position.copy(camLocal).applyMatrix4(camera.matrixWorld);
-    holder.quaternion.copy(camera.quaternion);
-    holder.scale.setScalar(scale);
-    // Turned toward the centre of the frame: in profile when pointing at it.
-    const pointing = (cast.right ?? 'gesture') === 'point' && frame.p > 0.08;
-    const turn = -side * (pointing ? 1.05 : 0.55);
-    figure.root.rotation.y += (turn - figure.root.rotation.y) * (frame.dt > 0 ? Math.min(1, frame.dt * 4) : 1);
-    // He looks at the discovery: the centre of the frame, or the sky.
-    look.set(0, cast.look === 'up' ? hh * 1.4 : hh * 0.25, -depth - 4).applyMatrix4(camera.matrixWorld);
-    const appear = clamp((frame.p - 0.02) / 0.08);
-    figure.set({
-      walk: 0,
-      left: cast.left ?? 'down',
-      right: frame.p > 0.08 ? cast.right ?? 'gesture' : 'down',
-      look,
-    });
-    figure.update(frame.t, frame.dt);
-    figure.root.position.y = (1 - appear) * -0.4;
+    // A waist-up picture is shown smaller, so his head is the same size.
+    const height = hh * 2 * (narrow ? 0.56 : 0.84) * (actor.kneeUp() ? 1 : 0.74);
+    const width = actor.width() * height;
+    const appear = clamp((frame.p - 0.015) / 0.07);
+    local.set(side * (hw - width * 0.5 - hw * (narrow ? 0.02 : 0.04)), bottom - height * 0.04 + (1 - appear) * -height * 0.05, -depth);
+    actor.root.position.copy(local).applyMatrix4(camera.matrixWorld);
+    actor.root.quaternion.copy(camera.quaternion);
+    actor.root.scale.setScalar(height);
+    actor.update(frame.t, frame.dt, null, { appear });
   };
   return obj;
 }

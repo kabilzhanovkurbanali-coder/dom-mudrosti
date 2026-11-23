@@ -4,6 +4,7 @@ import {
   tube, revealTube, ring, arcPoints, skyDome, rng, stage, smooth, lerp,
 } from '../kit.js';
 import { createFigure } from '../figure.js';
+import { createActor, screenFacing } from '../actor.js';
 import { worldTexture } from '../geo.js';
 
 /* ---------- Al-Biruni measures the Earth ---------- */
@@ -414,8 +415,10 @@ function sextant(params = {}) {
 
   // An astronomer walks down the steps of the arc after the spot of sunlight
   // and reads its place on the scale. He is to scale: the arc is 40 m.
-  const astronomer = createFigure(params.who ?? 'ulugbek', { prop: 'quill' });
-  astronomer.root.scale.setScalar(0.42);
+  const stand = params.cast?.stand;
+  const actor = stand ? createActor({ stand }, { height: 0.8 }) : null;
+  const astronomer = actor ?? createFigure(params.who ?? 'ulugbek', { prop: 'quill' });
+  if (!actor) astronomer.root.scale.setScalar(0.42);
   scene.add(astronomer.root);
   const human = label('человек — для масштаба', { size: 0.26, background: 'rgba(10,14,22,0.7)' });
   scene.add(human);
@@ -438,13 +441,17 @@ function sextant(params = {}) {
       const lag = a - 0.05 - Math.sin(t * 0.9) * 0.015;
       const feet = new THREE.Vector3(C.x + Math.cos(lag) * (R - 0.12), C.y + Math.sin(lag) * (R - 0.12), 0.05);
       astronomer.root.position.copy(feet);
-      astronomer.root.rotation.y = Math.PI / 2 + 0.5;
       const moving = Math.abs(Math.cos(t * 0.9)) > 0.35;
-      astronomer.set({ walk: moving ? 0.8 : 0, right: moving ? 'down' : 'write', left: moving ? 'down' : 'hold', look: hit });
-      astronomer.update(t, dt);
+      if (!actor) {
+        astronomer.root.rotation.y = Math.PI / 2 + 0.5;
+        astronomer.set({ walk: moving ? 0.8 : 0, right: moving ? 'down' : 'write', left: moving ? 'down' : 'hold', look: hit });
+        astronomer.update(t, dt);
+      }
       human.position.copy(feet).add(new THREE.Vector3(0.6, 1.3, 0.6));
       fade(human, stage(p, 0.15, 0.25));
       orbit(camera, new THREE.Vector3(1.8, 3.2, 0), fitDistance(camera, 7.5), lerp(0.25, -0.15, smooth(p)) + Math.sin(t * 0.05) * 0.05, 0.12);
+      // He faces the spot of sunlight he follows.
+      if (actor) actor.set({ walking: moving ? 0.8 : 0, face: screenFacing(camera, new THREE.Vector3(hit.x - feet.x, 0, 0)) }).update(t, dt, camera);
     },
   };
 }

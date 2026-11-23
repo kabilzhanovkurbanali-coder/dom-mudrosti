@@ -107,7 +107,10 @@ test('filters by field and era, sorts by name', async () => {
   assert.ok(med.body.scholars.every((s) => s.fields.includes('medicine')));
 
   const timurid = await get('/api/scholars?era=timurid');
-  assert.deepEqual(timurid.body.scholars.map((s) => s.slug).sort(), ['al-kashi', 'ali-kushchi', 'ulugbek']);
+  assert.deepEqual(timurid.body.scholars.map((s) => s.slug).sort(), ['al-kashi', 'ali-kushchi', 'alisher-navoi', 'ulugbek']);
+
+  const modern = await get('/api/scholars?era=modern');
+  assert.deepEqual(modern.body.scholars.map((s) => s.slug).sort(), ['chingiz-aitmatov', 'chokan-valikhanov', 'kanysh-satbayev']);
 
   const byName = await get('/api/scholars?sort=name');
   const names = byName.body.scholars.map((s) => s.name);
@@ -206,6 +209,20 @@ test('scholars of Central Asia: Kyrgyzstan, Kazakhstan, Uzbekistan', async () =>
   }
   const { body } = await get('/api/scholars/mahmud-kashgari/film');
   assert.ok(body.beats.some((b) => b.shots.some((s) => s.scene === 'turkmap')));
+});
+
+test('people closer to our time: Navoi, Valikhanov, Satbayev, Aitmatov', async () => {
+  const aitmatov = await get(`/api/scholars?q=${encodeURIComponent('Айтматов манкурт')}`);
+  assert.deepEqual(aitmatov.body.scholars.map((s) => s.slug), ['chingiz-aitmatov']);
+  for (const [slug, scene] of [['alisher-navoi', 'navoi-scales'], ['kanysh-satbayev', 'ore'], ['chingiz-aitmatov', 'translations'], ['chokan-valikhanov', 'journey']]) {
+    const { body } = await get(`/api/scholars/${slug}/film`);
+    const animation = body.beats.flatMap((b) => b.shots).find((s) => s.scene === scene);
+    assert.ok(animation, `${slug}: ${scene}`);
+    assert.equal(animation.params.who, slug);
+  }
+  // Real people of modern times get no made-up figure in the animations.
+  const { body } = await get('/api/scholars/chingiz-aitmatov/film');
+  assert.deepEqual(body.beats.flatMap((b) => b.shots).find((s) => s.scene === 'translations').params.cast, {});
 });
 
 test('every film shows a discovery as a 3D animation', async () => {
