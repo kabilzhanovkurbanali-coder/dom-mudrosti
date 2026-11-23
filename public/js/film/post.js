@@ -182,11 +182,18 @@ export function createPost(renderer) {
     },
 
     // Draws a scene into the current frame texture.
-    renderContent(scene, camera, { tone = false } = {}) {
+    renderContent(scene, camera, { tone = false, overlay = null } = {}) {
       toneA = tone ? 1 : 0;
       renderer.setRenderTarget(rtA);
       renderer.clear();
       renderer.render(scene, camera);
+      // A layer drawn over the scene with its own depth (the presenting scholar).
+      if (overlay) {
+        renderer.autoClear = false;
+        renderer.clearDepth();
+        renderer.render(overlay, camera);
+        renderer.autoClear = true;
+      }
     },
 
     // Freezes the last frame as the start of a cross-fade.

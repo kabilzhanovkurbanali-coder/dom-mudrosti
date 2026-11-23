@@ -6,6 +6,7 @@ import {
   revealTube, ring, rng, stage, smooth, lerp, clamp,
 } from '../kit.js';
 import { parchment } from './science.js';
+import { createFigure } from '../figure.js';
 
 const warmStage = (opts = {}) => createStage({ background: 0x120d08, ambient: 0.35, sun: 0.9, ...opts });
 
@@ -528,7 +529,7 @@ export function rhymes() {
 
 /* ---------- Al-Jawhari's wooden wings: why they could not hold him ---------- */
 
-export function wings() {
+export function wings({ params = {} } = {}) {
   const { scene, camera, sun } = createStage({ background: 0x2a3a52, ambient: 0.7, sun: 1.3, fog: [30, 70] });
   sun.position.set(6, 10, 6);
   const stone = matte(0xc2a67c);
@@ -542,22 +543,15 @@ export function wings() {
   ground.position.y = -6;
   scene.add(ground);
 
-  // A simple figure with two wooden panels tied to the arms.
-  const man = new THREE.Group();
-  const robe = matte(0xe6dcc8);
-  const body = new THREE.Mesh(new THREE.CapsuleGeometry(0.22, 0.7, 6, 16), robe);
-  body.position.y = 0.6;
-  const head = new THREE.Mesh(new THREE.SphereGeometry(0.17, 20, 14), matte(0xb07c56));
-  head.position.y = 1.25;
-  const turban = new THREE.Mesh(new THREE.SphereGeometry(0.19, 20, 14), matte(0xf4efe2));
-  turban.scale.set(1, 0.7, 1);
-  turban.position.y = 1.36;
-  man.add(body, head, turban);
+  // Al-Jawhari with two wooden panels tied to his arms.
+  const jawhari = createFigure(params.who ?? 'al-jawhari');
+  const man = jawhari.root;
+  man.scale.setScalar(0.75);
   const board = new THREE.MeshStandardMaterial({ color: 0x8a5a30, roughness: 0.8 });
-  const wingL = new THREE.Mesh(new THREE.BoxGeometry(1.1, 0.05, 0.55), board);
+  const wingL = new THREE.Mesh(new THREE.BoxGeometry(1.0, 0.05, 0.5), board);
   const wingR = wingL.clone();
-  wingL.position.set(-0.75, 0.95, 0);
-  wingR.position.set(0.75, 0.95, 0);
+  wingL.position.set(-0.75, 1.3, 0);
+  wingR.position.set(0.75, 1.3, 0);
   man.add(wingL, wingR);
   man.position.set(-1, 0, 0);
   scene.add(man);
@@ -620,7 +614,8 @@ export function wings() {
   return {
     scene,
     camera,
-    update({ t, p }) {
+    ownFigure: true,
+    update({ t, dt, p }) {
       title.update(p);
       // Stands on the roof, jumps, and drops away below the edge.
       const jump = stage(p, 0.36, 0.42);
@@ -632,6 +627,8 @@ export function wings() {
       const flap = Math.sin(t * 10) * 0.35 * jump * (1 - fall);
       wingL.rotation.z = flap;
       wingR.rotation.z = -flap;
+      jawhari.set({ walk: 0, left: 'gesture', right: 'gesture' });
+      jawhari.update(t, dt);
       fade(man, 1 - stage(p, 0.74, 0.8));
       const forces = stage(p, 0.5, 0.56) * (1 - stage(p, 0.68, 0.72));
       const center = man.position.clone().add(new THREE.Vector3(0, 0.6, 0.4));

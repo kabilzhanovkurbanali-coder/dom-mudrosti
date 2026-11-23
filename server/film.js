@@ -104,8 +104,9 @@ function readyPhotos(names, board, slug, mediaDir) {
 // animation shows how it was done and takes most of the time.
 // «animate: "only"» gives the whole part to the animation.
 export const ANIMATION_WEIGHT = 2.6;
-function withAnimation(photos, beat) {
-  const animation = { scene: beat.scene, params: beat.params ?? {}, weight: ANIMATION_WEIGHT };
+function withAnimation(photos, beat, who) {
+  // «who» tells the animation which scholar to dress its 3D figure as.
+  const animation = { scene: beat.scene, params: { ...(beat.params ?? {}), who }, weight: ANIMATION_WEIGHT };
   return photos.length && beat.animate !== 'only' ? [{ ...photos[0], weight: 1 }, animation] : [animation];
 }
 
@@ -166,7 +167,7 @@ export function buildFilms(content, scripts, narrator, { voiceover = {}, shots =
       beats: voicedBeats.map((b) => {
         const { animate, photos: names, ...beat } = b;
         const photos = readyPhotos(names, board, s.slug, mediaDir);
-        return { ...beat, shots: animate ? withAnimation(photos, b) : photos };
+        return { ...beat, shots: animate ? withAnimation(photos, b, s.slug) : photos };
       }),
     }));
   });

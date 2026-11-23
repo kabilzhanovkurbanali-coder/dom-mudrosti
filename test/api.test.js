@@ -215,9 +215,11 @@ test('every film shows a discovery as a 3D animation', async () => {
     assert.ok(animations.length >= 1, `нет анимации открытия у ${s.slug}`);
   }
   const { body } = await get('/api/scholars/al-biruni/film');
-  const measure = body.beats.find((b) => b.scene === 'earth-measure');
+  // Al-Biruni himself climbs the mountain with his astrolabe.
+  const measure = body.beats.find((b) => b.scene === 'biruni-measure');
   const animation = measure.shots.at(-1);
-  assert.equal(animation.scene, 'earth-measure');
+  assert.equal(animation.scene, 'biruni-measure');
+  assert.equal(animation.params.who, 'al-biruni');
   assert.ok(animation.weight > 1);
   // «only»: the algebra part of al-Khwarizmi is all animation.
   const algebra = (await get('/api/scholars/al-khwarizmi/film')).body.beats.find((b) => b.scene === 'algebra');

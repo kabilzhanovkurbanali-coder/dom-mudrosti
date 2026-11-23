@@ -2,6 +2,7 @@ import { THREE, clamp } from './kit.js';
 import { SCENES } from './scenes/index.js';
 import { createCinema } from './cinema.js';
 import { createPost } from './post.js';
+import { addPresenter } from './cast.js';
 
 const CROSSFADE = 0.85;
 
@@ -43,11 +44,14 @@ function makeEnvironment(renderer) {
   return env;
 }
 
-function prepareScene(obj, environment) {
+function prepareScene(obj, environment, id, params) {
   if (!obj.scene.environment) {
     obj.scene.environment = environment;
     obj.scene.environmentIntensity = 0.55;
   }
+  // The scholar of the film presents his discovery.
+  addPresenter(obj, id, params);
+  if (obj.overlay) obj.overlay.environment = environment;
   return obj;
 }
 
@@ -64,6 +68,9 @@ export function createEngine(canvas) {
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.NoToneMapping;
+  // Scenes with people cast soft shadows from the sun.
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
   const post = createPost(renderer);
   const environment = makeEnvironment(renderer);
@@ -126,11 +133,12 @@ export function createEngine(canvas) {
     if (animation?.shot === shot) return animation;
     if (animation) disposeTree(animation.obj.scene);
     const factory = SCENES[shot.scene] ?? SCENES.library;
-    animation = { shot, start: time, obj: prepareScene(factory({ params: shot.params ?? {}, ctx }), environment) };
+    animation = { shot, start: time, obj: prepareScene(factory({ params: shot.params ?? {}, ctx }), environment, shot.scene, shot.params ?? {}) };
     frame3d(animation.obj.camera);
     return animation;
   }
   function dropAnimation() {
+    if (animation?.obj.overlay) disposeTree(animation.obj.overlay);
     if (animation) disposeTree(animation.obj.scene);
     animation = null;
   }
@@ -146,7 +154,7 @@ export function createEngine(canvas) {
       if (shot?.scene) {
         const a = animationFor(shot);
         a.obj.update?.({ t: time - a.start, dt, p: cinema.local(p) });
-        post.renderContent(a.obj.scene, a.obj.camera, { tone: true });
+        post.renderContent(a.obj.scene, a.obj.camera, { tone: true, overlay: a.obj.overlay });
       } else {
         if (animation) dropAnimation();
         cinema.update({ t: time, dt, p });
@@ -154,7 +162,7 @@ export function createEngine(canvas) {
       }
     } else {
       current.update?.({ t: time, dt, p });
-      post.renderContent(current.scene, current.camera, { tone: true });
+      post.renderContent(current.scene, current.camera, { tone: true, overlay: current.overlay });
     }
     fade = clamp(fade + dt / fadeTime);
     leak = Math.max(0, leak - dt * 1.4);
@@ -178,6 +186,7 @@ export function createEngine(canvas) {
 
   function leaveScene() {
     if (mode === 'scene' && current) disposeTree(current.scene);
+    if (mode === 'scene' && current?.overlay) disposeTree(current.overlay);
     current = null;
     dropAnimation();
   }
@@ -189,7 +198,7 @@ export function createEngine(canvas) {
       if (mode) crossfade();
       leaveScene();
       const factory = SCENES[id] ?? SCENES.library;
-      current = prepareScene(factory({ params, ctx }), environment);
+      current = prepareScene(factory({ params, ctx }), environment, id, params);
       mode = 'scene';
       time = 0;
       frame3d(current.camera);

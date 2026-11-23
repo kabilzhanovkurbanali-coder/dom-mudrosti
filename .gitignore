@@ -13,6 +13,6 @@ dist/
 
 # не публикуется: справочное видео, служебные файлы macOS,
 # запасные варианты портретов (выбранный лежит в portrait-1.jpg)
-public/724976282.mp4
+public/*.mp4
 .DS_Store
 public/media/shots/**/*.v[0-9].jpg

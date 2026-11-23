@@ -1,5 +1,6 @@
 import { title, journey, globe, moon, city, fortress, ruins, comet, court, library } from './world.js';
 import { earthMeasure, celestial, stars, orbitScene, observatory, tusi } from './sky.js';
+import { biruniMeasure } from './biruni.js';
 import { kutadgu, turkmap, sines, rhymes, wings } from './steppe.js';
 import { algebra, numerals, cipher, optics, nile, laboratory, heart, music, cubic, machine, pi } from './science.js';
 
@@ -16,6 +17,7 @@ export const SCENES = {
   court,
   library,
   'earth-measure': earthMeasure,
+  'biruni-measure': biruniMeasure,
   celestial,
   stars,
   orbit: orbitScene,

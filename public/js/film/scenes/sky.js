@@ -3,6 +3,7 @@ import {
   THREE, COLORS, createStage, fitDistance, orbit, metal, matte, shine, glow, label, fade, starfield, rod, placeRod,
   tube, revealTube, ring, arcPoints, skyDome, rng, stage, smooth, lerp,
 } from '../kit.js';
+import { createFigure } from '../figure.js';
 import { worldTexture } from '../geo.js';
 
 /* ---------- Al-Biruni measures the Earth ---------- */
@@ -321,7 +322,7 @@ export function orbitScene() {
 /* ---------- Observatory ---------- */
 
 export function observatory({ params }) {
-  if (params.variant === 'sextant') return sextant();
+  if (params.variant === 'sextant') return sextant(params);
   const { scene, camera } = createStage({ background: 0x070b14, fog: [16, 40], ambient: 0.45, sun: 0.9 });
   scene.add(skyDome(0x050912, 0x22304a), starfield(2500, 300, 19));
   const ground = new THREE.Mesh(new THREE.CircleGeometry(40, 48), matte(0x3b352c));
@@ -373,7 +374,7 @@ export function observatory({ params }) {
   };
 }
 
-function sextant() {
+function sextant(params = {}) {
   const { scene, camera, sun } = createStage({ background: 0x2a3244, fog: [20, 60], ambient: 0.7, sun: 1.8 });
   sun.position.set(6, 10, 4);
   scene.add(skyDome(0x3d5a80, 0xe2c08a));
@@ -411,10 +412,19 @@ function sextant() {
   tag.position.set(1.5, 7.4, 0);
   scene.add(tag);
 
+  // An astronomer walks down the steps of the arc after the spot of sunlight
+  // and reads its place on the scale. He is to scale: the arc is 40 m.
+  const astronomer = createFigure(params.who ?? 'ulugbek', { prop: 'quill' });
+  astronomer.root.scale.setScalar(0.42);
+  scene.add(astronomer.root);
+  const human = label('человек — для масштаба', { size: 0.26, background: 'rgba(10,14,22,0.7)' });
+  scene.add(human);
+
   return {
     scene,
     camera,
-    update({ t, p }) {
+    ownFigure: true,
+    update({ t, dt, p }) {
       const a = lerp(-Math.PI / 2 + 0.15, -Math.PI / 2 + 0.85, smooth(p));
       const hit = new THREE.Vector3(C.x + Math.cos(a) * R, C.y + Math.sin(a) * R, 0);
       spot.position.copy(hit);
@@ -424,6 +434,16 @@ function sextant() {
       beam.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), dir.clone().normalize());
       sunDisc.position.copy(C).addScaledVector(dir.clone().normalize(), -14);
       fade(tag, stage(p, 0.08, 0.2));
+      // He keeps a step behind the spot, then stops and writes down the reading.
+      const lag = a - 0.05 - Math.sin(t * 0.9) * 0.015;
+      const feet = new THREE.Vector3(C.x + Math.cos(lag) * (R - 0.12), C.y + Math.sin(lag) * (R - 0.12), 0.05);
+      astronomer.root.position.copy(feet);
+      astronomer.root.rotation.y = Math.PI / 2 + 0.5;
+      const moving = Math.abs(Math.cos(t * 0.9)) > 0.35;
+      astronomer.set({ walk: moving ? 0.8 : 0, right: moving ? 'down' : 'write', left: moving ? 'down' : 'hold', look: hit });
+      astronomer.update(t, dt);
+      human.position.copy(feet).add(new THREE.Vector3(0.6, 1.3, 0.6));
+      fade(human, stage(p, 0.15, 0.25));
       orbit(camera, new THREE.Vector3(1.8, 3.2, 0), fitDistance(camera, 7.5), lerp(0.25, -0.15, smooth(p)) + Math.sin(t * 0.05) * 0.05, 0.12);
     },
   };
