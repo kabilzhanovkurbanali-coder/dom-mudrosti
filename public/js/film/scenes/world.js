@@ -3,7 +3,7 @@ import {
   THREE, COLORS, createStage, fitDistance, orbit, metal, matte, shine, glow, label, fade, starfield, dust, rod,
   tube, revealTube, ring, star8Shape, skyDome, pointedArch, houseColors, rng, stage, smooth, lerp, clamp,
 } from '../kit.js';
-import { MAP, mapPosition, mapTexture, worldTexture, spherePosition } from '../geo.js';
+import { MAP, PLACES, mapPosition, mapTexture, worldTexture, spherePosition, reliefMap } from '../geo.js';
 
 /* ---------- Title card ---------- */
 
@@ -59,26 +59,89 @@ function pin(name, height) {
   return group;
 }
 
-export function journey({ params }) {
-  const { scene, camera } = createStage({ background: 0x0a0f16, fog: [45, 120], ambient: 0.85, sun: 1.1 });
-  const map = new THREE.Mesh(
-    new THREE.PlaneGeometry(MAP.width, MAP.height),
-    new THREE.MeshStandardMaterial({ map: mapTexture(), roughness: 0.95 }),
-  );
-  map.rotation.x = -Math.PI / 2;
-  const frame = new THREE.Mesh(new THREE.BoxGeometry(MAP.width + 0.5, 0.2, MAP.height + 0.5), matte(0x3b2a18));
-  frame.position.y = -0.11;
-  scene.add(map, frame);
+// A small camel for the caravan (length about 1 unit before scaling).
+function camel() {
+  const g = new THREE.Group();
+  const hide = new THREE.MeshStandardMaterial({ color: 0xc49a62, roughness: 0.85 });
+  const dark = new THREE.MeshStandardMaterial({ color: 0x7a5a36, roughness: 0.9 });
+  const body = new THREE.Mesh(new THREE.SphereGeometry(0.32, 16, 12), hide);
+  body.scale.set(1.5, 0.75, 0.7);
+  body.position.y = 0.9;
+  const hump = new THREE.Mesh(new THREE.SphereGeometry(0.22, 14, 10), hide);
+  hump.scale.set(1.2, 1, 0.9);
+  hump.position.set(-0.05, 1.18, 0);
+  const neck = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.1, 0.62, 10), hide);
+  neck.position.set(0.55, 1.12, 0);
+  neck.rotation.z = -0.7;
+  const head = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.13, 0.13), hide);
+  head.position.set(0.82, 1.38, 0);
+  const pack = new THREE.Mesh(new THREE.BoxGeometry(0.34, 0.2, 0.62), new THREE.MeshStandardMaterial({ color: 0x8a2a1a, roughness: 0.8 }));
+  pack.position.set(-0.2, 1.02, 0);
+  g.add(body, hump, neck, head, pack);
+  const legs = [];
+  for (const [x, z] of [[0.32, 0.14], [0.32, -0.14], [-0.32, 0.14], [-0.32, -0.14]]) {
+    const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.035, 0.72, 8), dark);
+    leg.geometry.translate(0, -0.36, 0);
+    leg.position.set(x, 0.74, z);
+    g.add(leg);
+    legs.push(leg);
+  }
+  g.traverse((o) => {
+    if (o.isMesh) o.castShadow = true;
+  });
+  g.userData.walk = (t) => legs.forEach((leg, i) => {
+    leg.rotation.z = Math.sin(t * 6 + (i % 2 ? Math.PI : 0) + (i > 1 ? Math.PI / 2 : 0)) * 0.35;
+  });
+  return g;
+}
 
+export function journey({ params }) {
+  const { scene, camera, sun } = createStage({ background: 0x0a0f16, fog: [45, 120], ambient: 0.55, sun: 1.6 });
   const route = params.route ?? null;
   const names = route ?? [params.from, ...(params.to ?? [])];
-  const points = names.map((n) => mapPosition(n, 0.02));
+  // The whole map, flat and a little dimmer; the region of the route on top
+  // of it, sharp and in relief.
+  const map = new THREE.Mesh(new THREE.PlaneGeometry(MAP.width, MAP.height), new THREE.MeshStandardMaterial({ map: mapTexture(), roughness: 0.95, color: 0xb2a284 }));
+  map.rotation.x = -Math.PI / 2;
+  map.position.y = -0.02;
+  map.receiveShadow = true;
+  const frame = new THREE.Mesh(new THREE.BoxGeometry(MAP.width + 0.5, 0.2, MAP.height + 0.5), matte(0x3b2a18));
+  frame.position.y = -0.13;
+  const lons = names.map((n) => PLACES[n]?.[0] ?? 44);
+  const lats = names.map((n) => PLACES[n]?.[1] ?? 33);
+  const midLon = (Math.min(...lons) + Math.max(...lons)) / 2;
+  const midLat = (Math.min(...lats) + Math.max(...lats)) / 2;
+  const halfLon = Math.max(13, (Math.max(...lons) - Math.min(...lons)) / 2 + 8);
+  const halfLat = Math.max(8, (Math.max(...lats) - Math.min(...lats)) / 2 + 5);
+  const bounds = {
+    lon0: Math.max(MAP.lon0, midLon - halfLon), lon1: Math.min(MAP.lon1, midLon + halfLon),
+    lat0: Math.max(MAP.lat0, midLat - halfLat), lat1: Math.min(MAP.lat1, midLat + halfLat),
+  };
+  const relief = reliefMap(bounds);
+  scene.add(map, frame, relief);
+  const heightAt = relief.userData.heightAt;
+  const lonLat = (v) => [MAP.lon0 + (v.x + MAP.width / 2) / (MAP.cos * MAP.k), MAP.lat0 + (-v.z + MAP.height / 2) / MAP.k];
+  const ground = (v, lift = 0.02) => {
+    const [lon, lat] = lonLat(v);
+    return v.setY(heightAt(lon, lat) + lift);
+  };
+
+  const points = names.map((n) => ground(mapPosition(n, 0)));
   const box = new THREE.Box3().setFromPoints(points);
   const center = box.getCenter(new THREE.Vector3());
   const radius = Math.max(2.2, box.getSize(new THREE.Vector3()).length() / 2 + 1);
   // Pins, labels and lines grow with the area shown, so they stay readable.
   const scale = clamp(radius / 3, 1, 3);
   const target = new THREE.Vector3();
+  // Low evening sun from the west: the ranges cast long shadows.
+  sun.position.copy(center).add(new THREE.Vector3(-9, 5, 3));
+  sun.target.position.copy(center);
+  scene.add(sun.target);
+  sun.castShadow = true;
+  sun.shadow.mapSize.set(2048, 2048);
+  const span3 = radius * 2.2;
+  Object.assign(sun.shadow.camera, { left: -span3, right: span3, top: span3, bottom: -span3, near: 0.5, far: 40 });
+  sun.shadow.bias = -0.0008;
 
   const pins = names.map((name, i) => {
     const p = pin(name, i % 2 ? 0.95 : 0.62);
@@ -89,21 +152,44 @@ export function journey({ params }) {
     return p;
   });
 
+  // The route follows the ground: over the plains and through the passes.
   const pairs = route ? points.slice(1).map((b, i) => [points[i], b]) : points.slice(1).map((b) => [points[0], b]);
   const segments = pairs.map(([a, b]) => {
-    const dist = a.distanceTo(b);
-    const mid = a.clone().lerp(b, 0.5);
-    mid.y = route ? 0.2 + dist * 0.16 : 0.5 + dist * 0.28;
-    const curve = new THREE.QuadraticBezierCurve3(a, mid, b);
-    const mesh = new THREE.Mesh(new THREE.TubeGeometry(curve, 120, 0.035 * scale, 8), shine(COLORS.gold, 1.1));
+    const pts = [];
+    for (let i = 0; i <= 40; i++) {
+      const v = a.clone().lerp(b, i / 40);
+      pts.push(ground(v, 0.035 * scale));
+    }
+    const curve = new THREE.CatmullRomCurve3(pts);
+    const mesh = new THREE.Mesh(new THREE.TubeGeometry(curve, 160, 0.045 * scale, 8), shine(COLORS.gold, 1.3));
     revealTube(mesh, 0);
     scene.add(mesh);
     return { curve, mesh };
   });
-  const traveler = glow(0xfff0c0, 0.9 * scale, 1);
+  // A caravan of three camels walks at the head of the route.
+  const caravan = [0, 1, 2].map(() => {
+    const c = camel();
+    c.scale.setScalar(0.3 * scale);
+    scene.add(c);
+    return c;
+  });
+  const traveler = glow(0xfff0c0, 0.5 * scale, 0.6);
   scene.add(traveler);
   const start = 0.08;
   const span = 0.8 / Math.max(1, segments.length);
+  const along = (p) => {
+    // Position on the whole route at progress p (0…1 of the travel time).
+    let head = points[0];
+    let dir = new THREE.Vector3(1, 0, 0);
+    segments.forEach((s, i) => {
+      const f = stage(p, start + i * span, start + (i + 1) * span);
+      if (f > 0) {
+        head = s.curve.getPointAt(Math.min(0.999, f));
+        dir = s.curve.getTangentAt(Math.min(0.999, f));
+      }
+    });
+    return { head, dir };
+  };
 
   return {
     scene,
@@ -114,14 +200,21 @@ export function journey({ params }) {
       segments.forEach((s, i) => {
         const f = stage(p, start + i * span, start + (i + 1) * span);
         revealTube(s.mesh, f);
-        if (f > 0 && f < 1) head = s.curve.getPoint(f);
-        if (f >= 1) head = s.curve.getPoint(1);
+        if (f > 0 && f < 1) head = s.curve.getPointAt(f);
+        if (f >= 1) head = s.curve.getPointAt(1);
         fade(pins[i + 1], stage(f, 0.85, 1));
       });
-      traveler.position.copy(head);
-      traveler.scale.setScalar((0.8 + Math.sin(t * 4) * 0.12) * scale);
-      target.copy(center).lerp(head, 0.3);
-      orbit(camera, target, fitDistance(camera, radius) * lerp(1.12, 0.92, smooth(p)), Math.sin(t * 0.05) * 0.25, 0.95);
+      caravan.forEach((c, i) => {
+        const { head: h, dir } = along(Math.max(0, p - i * 0.02));
+        c.position.copy(h).add(new THREE.Vector3(0, -0.02 * scale, 0));
+        c.rotation.y = Math.atan2(-dir.z, dir.x);
+        c.userData.walk(t + i * 0.4);
+        c.visible = p > start * 0.5;
+      });
+      traveler.position.copy(head).add(new THREE.Vector3(0, 0.35 * scale, 0));
+      traveler.material.opacity = 0.35 + 0.2 * Math.sin(t * 4);
+      target.copy(center).lerp(head, 0.35);
+      orbit(camera, target, fitDistance(camera, radius) * lerp(1.0, 0.82, smooth(p)), Math.sin(t * 0.05) * 0.25 - 0.1, 0.72);
     },
   };
 }

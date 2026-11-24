@@ -128,6 +128,15 @@ const AMERICAS_AND_REST = [
 ];
 
 // Seas enclosed by the big land polygon, painted over it.
+// Lakes of Central Asia (as in the 19th century: the Aral full).
+const LAKES = [
+  // Issyk-Kul lake
+  [[76.2, 42.55], [76.6, 42.85], [77.4, 42.95], [78.2, 42.75], [78.45, 42.45], [77.9, 42.2], [77.0, 42.2], [76.4, 42.3]],
+  // Balkhash
+  [[73.5, 46.4], [74.6, 46.6], [75.6, 46.5], [77.0, 46.45], [78.6, 46.55], [79.2, 46.2], [78.4, 45.9], [77.0, 45.9],
+    [75.6, 45.95], [74.6, 45.6], [73.6, 45.4], [73.4, 45.9]],
+];
+
 const INNER_SEAS = [
   // Mediterranean
   [[-5.6, 36.1], [-4.4, 36.7], [-2.0, 36.8], [-0.5, 38.5], [0.2, 39.5], [0.9, 41.0], [3.2, 41.9], [3.1, 43.0],
@@ -204,8 +213,8 @@ function paint(g, w, h, project, theme) {
   const land = [AFROEURASIA, ...ISLANDS, ...AMERICAS_AND_REST];
   strokePolys(g, land, project, theme.shallow, theme.shallowWidth);
   fillPolys(g, land, project, theme.land);
-  fillPolys(g, INNER_SEAS, project, theme.sea);
-  strokePolys(g, [...land, ...INNER_SEAS], project, theme.coast, theme.coastWidth);
+  fillPolys(g, [...INNER_SEAS, ...LAKES], project, theme.sea);
+  strokePolys(g, [...land, ...INNER_SEAS, ...LAKES], project, theme.coast, theme.coastWidth);
   if (theme.river) strokePolys(g, RIVERS, project, theme.river, theme.riverWidth, false);
 
   // Parchment speckle so the land does not look like flat plastic.
@@ -220,7 +229,7 @@ function paint(g, w, h, project, theme) {
 }
 
 // The regional map used by the journey scene.
-export const MAP = { lon0: -10, lon1: 80, lat0: 24, lat1: 53, k: 0.3, cos: Math.cos((38.5 * Math.PI) / 180) };
+export const MAP = { lon0: -10, lon1: 92, lat0: 24, lat1: 56, k: 0.3, cos: Math.cos((38.5 * Math.PI) / 180) };
 MAP.width = (MAP.lon1 - MAP.lon0) * MAP.cos * MAP.k;
 MAP.height = (MAP.lat1 - MAP.lat0) * MAP.k;
 
@@ -316,4 +325,163 @@ export function spherePosition(lon, lat, radius) {
     radius * Math.cos(theta),
     radius * Math.sin(phi) * Math.sin(theta),
   );
+}
+
+// Mountain ranges: [points (lon, lat), height, half-width in degrees].
+const RANGES = [
+  [[[69, 41.6], [72, 41.9], [75, 42.0], [77.5, 42.2], [80, 42.6]], 1.0, 1.3], // Tian Shan
+  [[[76.5, 43.0], [78.5, 43.2], [80, 43.4]], 0.75, 0.5], // Zailiysky Alatau
+  [[[78, 45.0], [80.5, 45.4]], 0.6, 0.6], // Dzungarian Alatau
+  [[[71, 39.4], [73, 39.6], [75.5, 39.8]], 0.8, 0.6], // Alay
+  [[[71.5, 38.6], [73, 38.3], [75, 38.2]], 1.15, 1.0], // Pamir
+  [[[66, 35.4], [69, 35.6], [71, 36.2], [72.5, 36.6]], 0.95, 0.9], // Hindu Kush
+  [[[74.5, 35.8], [77, 35.3], [79, 34.8]], 1.25, 0.8], // Karakoram
+  [[[75, 36.6], [78, 36.0], [80, 35.8]], 1.05, 0.9], // Kunlun
+  [[[74, 33.8], [77, 32.0], [80, 30.4]], 1.3, 1.0], // Himalaya
+  [[[68.2, 43.4], [70, 42.7]], 0.35, 0.4], // Karatau
+  [[[54, 38.6], [57, 38.0], [60, 36.8]], 0.45, 0.6], // Kopet Dag
+  [[[49, 36.5], [52, 35.9], [55, 36.6]], 0.6, 0.6], // Elburz
+  [[[45, 35.6], [48, 33.0], [51, 30.5], [54.5, 28.5]], 0.55, 1.0], // Zagros
+  [[[38, 44.0], [42, 43.0], [46, 42.0], [49, 41.0]], 0.8, 0.7], // Caucasus
+  [[[30, 37.0], [34, 37.0], [37, 37.8]], 0.45, 0.6], // Taurus
+  [[[6, 45.4], [9, 46.3], [12, 46.8], [14, 46.8]], 0.7, 0.8], // Alps
+  [[[-1.5, 43.0], [2.5, 42.6]], 0.45, 0.4], // Pyrenees
+  [[[-8, 31.2], [-4, 32.6], [0, 34.0], [5, 35.6]], 0.55, 0.8], // Atlas
+  [[[58.5, 53], [59, 50.5]], 0.3, 0.6], // southern Urals
+];
+
+function distToSegment(px, py, ax, ay, bx, by) {
+  const dx = bx - ax;
+  const dy = by - ay;
+  const u = Math.max(0, Math.min(1, ((px - ax) * dx + (py - ay) * dy) / (dx * dx + dy * dy)));
+  return Math.hypot(px - (ax + u * dx), py - (ay + u * dy));
+}
+
+const lerpN = (a, b, k) => a + (b - a) * k;
+
+// Height of the relief (0…1.3) at a longitude and latitude.
+export function reliefHeight(lon, lat) {
+  let h = 0;
+  for (const [pts, height, width] of RANGES) {
+    let d = Infinity;
+    for (let i = 0; i < pts.length - 1; i++) d = Math.min(d, distToSegment(lon, lat * 1.0, pts[i][0], pts[i][1], pts[i + 1][0], pts[i + 1][1]));
+    const k = Math.exp(-(d * d) / (2 * width * width * 0.45));
+    // Jagged crests: ridged noise in several octaves.
+    let ridge = 0;
+    let amp = 0.5;
+    let f = 1.6;
+    for (let o = 0; o < 4; o++) {
+      ridge += amp * (1 - Math.abs(Math.sin(lon * f * 1.7 + lat * f * 0.9 + o * 1.3) * Math.cos(lon * f * 0.6 - lat * f * 1.9 + o)));
+      amp *= 0.5;
+      f *= 2.1;
+    }
+    h = Math.max(h, height * k * (0.45 + 0.6 * ridge));
+  }
+  return h;
+}
+
+// A relief map of one region (around a route): painted sharp for that region
+// alone, lifted into mountains with atlas-like hill shading. It lies on top of
+// the flat map of the whole area. bounds: { lon0, lon1, lat0, lat1 }.
+const reliefCache = new Map();
+export function reliefMap(bounds, { lift = 0.32 } = {}) {
+  const { lon0, lon1, lat0, lat1 } = bounds;
+  const key = `${lon0}:${lon1}:${lat0}:${lat1}`;
+  const width = (lon1 - lon0) * MAP.cos * MAP.k;
+  const height = (lat1 - lat0) * MAP.k;
+  // Heights fade to nothing at the edge of the region, so it meets the flat map.
+  const edge = (lon, lat) => {
+    const ex = Math.min(lon - lon0, lon1 - lon) / ((lon1 - lon0) * 0.12);
+    const ey = Math.min(lat - lat0, lat1 - lat) / ((lat1 - lat0) * 0.12);
+    return Math.max(0, Math.min(1, ex, ey));
+  };
+  if (!reliefCache.has(key)) {
+    const w = 2048;
+    const h = Math.round((w * height) / width);
+    const canvas = document.createElement('canvas');
+    canvas.width = w;
+    canvas.height = h;
+    const g = canvas.getContext('2d');
+    const project = (lon, lat) => [((lon - lon0) / (lon1 - lon0)) * w, (1 - (lat - lat0) / (lat1 - lat0)) * h];
+    paint(g, w, h, project, {
+      sea: '#1d4651', shallow: '#2a5c66', shallowWidth: 10, land: '#d9c49b', coast: '#8a6f45', coastWidth: 2.5,
+      river: '#3f7d86', riverWidth: 4, speckle: 0.05,
+    });
+    const data = g.getImageData(0, 0, w, h).data;
+    const seaAt = (x, y) => {
+      const i = (Math.min(h - 1, Math.max(0, Math.round(y))) * w + Math.min(w - 1, Math.max(0, Math.round(x)))) * 4;
+      return data[i + 2] > data[i] + 10 && data[i + 1] > data[i];
+    };
+    const lonOf = (x) => lon0 + (x / w) * (lon1 - lon0);
+    const latOf = (y) => lat0 + (1 - y / h) * (lat1 - lat0);
+    const step = 2;
+    const dLon = (step / w) * (lon1 - lon0);
+    const dLat = (step / h) * (lat1 - lat0);
+    const shade = g.createImageData(w, h);
+    for (let y = 0; y < h; y += step) {
+      for (let x = 0; x < w; x += step) {
+        if (seaAt(x, y)) continue;
+        const lon = lonOf(x);
+        const lat = latOf(y);
+        const r = reliefHeight(lon, lat) * edge(lon, lat);
+        if (r < 0.03) continue;
+        const gx = (reliefHeight(lon + dLon, lat) - reliefHeight(lon - dLon, lat)) / (2 * dLon);
+        const gy = (reliefHeight(lon, lat + dLat) - reliefHeight(lon, lat - dLat)) / (2 * dLat);
+        const lit = Math.max(-1, Math.min(1, (-gx + gy) * 1.4));
+        let cr = 150;
+        let cg = 112;
+        let cb = 70;
+        let a = Math.min(0.8, r * 0.95);
+        if (r > 0.95) {
+          const k = Math.min(1, (r - 0.95) * 4);
+          cr = lerpN(cr, 246, k);
+          cg = lerpN(cg, 242, k);
+          cb = lerpN(cb, 236, k);
+          a = Math.max(a, 0.6 + 0.3 * k);
+        }
+        const l = lit * 75;
+        for (let yy = 0; yy < step; yy++) {
+          for (let xx = 0; xx < step; xx++) {
+            const i = ((y + yy) * w + x + xx) * 4;
+            shade.data[i] = Math.max(0, Math.min(255, cr + l));
+            shade.data[i + 1] = Math.max(0, Math.min(255, cg + l));
+            shade.data[i + 2] = Math.max(0, Math.min(255, cb + l));
+            shade.data[i + 3] = a * 255;
+          }
+        }
+      }
+    }
+    const layer = document.createElement('canvas');
+    layer.width = w;
+    layer.height = h;
+    layer.getContext('2d').putImageData(shade, 0, 0);
+    g.drawImage(layer, 0, 0);
+    const tex = new THREE.CanvasTexture(canvas);
+    tex.colorSpace = THREE.SRGBColorSpace;
+    tex.anisotropy = 8;
+    tex.userData.shared = true;
+    const geo = new THREE.PlaneGeometry(width, height, 360, Math.max(80, Math.round((360 * height) / width)));
+    geo.rotateX(-Math.PI / 2);
+    const pos = geo.attributes.position;
+    for (let i = 0; i < pos.count; i++) {
+      const lon = lon0 + (pos.getX(i) + width / 2) / (MAP.cos * MAP.k);
+      const lat = lat0 + (-pos.getZ(i) + height / 2) / MAP.k;
+      const x = ((lon - lon0) / (lon1 - lon0)) * w;
+      const y = (1 - (lat - lat0) / (lat1 - lat0)) * h;
+      pos.setY(i, seaAt(x, y) ? -0.005 : 0.015 + reliefHeight(lon, lat) * edge(lon, lat) * lift);
+    }
+    geo.computeVertexNormals();
+    reliefCache.set(key, { tex, geo });
+  }
+  const { tex, geo } = reliefCache.get(key);
+  const mesh = new THREE.Mesh(geo, new THREE.MeshStandardMaterial({ map: tex, roughness: 0.92, color: 0xc8b898 }));
+  mesh.position.set(((lon0 + lon1) / 2 - MAP.lon0) * MAP.cos * MAP.k - MAP.width / 2, 0.01, -(((lat0 + lat1) / 2 - MAP.lat0) * MAP.k - MAP.height / 2));
+  mesh.receiveShadow = true;
+  mesh.castShadow = true;
+  mesh.userData.keep = true;
+  mesh.userData.heightAt = (lon, lat) => {
+    if (lon < lon0 || lon > lon1 || lat < lat0 || lat > lat1) return 0.01;
+    return 0.025 + reliefHeight(lon, lat) * edge(lon, lat) * lift;
+  };
+  return mesh;
 }

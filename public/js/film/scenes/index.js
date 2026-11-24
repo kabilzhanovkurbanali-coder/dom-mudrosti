@@ -5,7 +5,8 @@ import { kutadgu, sines, rhymes, wings } from './steppe.js';
 import { turkmap } from './kashgari.js';
 import { navoiScales, ore, translations } from './modern.js';
 import { algebra, numerals } from './khwarizmi.js';
-import { cipher, optics, nile, laboratory, heart, music, cubic, machine } from './science.js';
+import { cipher, optics, nile, heart, music, cubic, machine } from './science.js';
+import { laboratory } from './medicine.js';
 import { pi } from './kashi.js';
 
 // Scene ids used in data/films.json.

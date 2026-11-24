@@ -3,11 +3,12 @@
 // of Abu Nasr Mansur, the rhyme dictionary and the wings of al-Jawhari.
 import {
   THREE, COLORS, createStage, fitDistance, orbit, metal, matte, shine, glow, label, fade, dust, rod, tube,
-  revealTube, ring, rng, stage, smooth, lerp, clamp,
+  revealTube, ring, rng, stage, smooth, lerp, clamp, skyDome,
 } from '../kit.js';
 import { parchment } from './science.js';
 import { createFigure } from '../figure.js';
 import { createActor } from '../actor.js';
+import { glaze } from '../materials.js';
 
 const warmStage = (opts = {}) => createStage({ background: 0x120d08, ambient: 0.35, sun: 0.9, ...opts });
 
@@ -530,19 +531,138 @@ export function rhymes() {
 
 /* ---------- Al-Jawhari's wooden wings: why they could not hold him ---------- */
 
-export function wings({ params = {} } = {}) {
-  const { scene, camera, sun } = createStage({ background: 0x2a3a52, ambient: 0.7, sun: 1.3, fog: [30, 70] });
-  sun.position.set(6, 10, 6);
-  const stone = matte(0xc2a67c);
-  const roof = new THREE.Mesh(new THREE.BoxGeometry(5, 6, 4), stone);
-  roof.position.set(-3, -3, 0);
-  const dome = new THREE.Mesh(new THREE.SphereGeometry(1.4, 32, 16, 0, Math.PI * 2, 0, Math.PI / 2), matte(0x5aa6a0));
-  dome.position.set(-4, 0, 0);
-  scene.add(roof, dome);
-  const ground = new THREE.Mesh(new THREE.PlaneGeometry(60, 60), matte(0x6b5a40));
+// Nishapur at dusk: the roof of the mosque with its tiled dome and minaret,
+// the city of clay houses below, mountains on the horizon, birds in the air.
+function nishapur(scene) {
+  const rand = rng(77);
+  scene.add(skyDome(0x1a2748, 0xf0a060, 300));
+  // Roof of the mosque: walls, a parapet with merlons, the dome on a drum.
+  const brick = new THREE.MeshStandardMaterial({ color: 0xc9a173, roughness: 0.9 });
+  const roof = new THREE.Mesh(new THREE.BoxGeometry(7, 6, 5), brick);
+  roof.position.set(-3.6, -3, 0);
+  roof.receiveShadow = true;
+  scene.add(roof);
+  for (let i = 0; i < 13; i++) {
+    const m = new THREE.Mesh(new THREE.BoxGeometry(0.32, 0.38, 0.32), brick);
+    m.position.set(-7 + i * 0.56, 0.19, 2.35);
+    m.castShadow = true;
+    scene.add(m);
+  }
+  const drum = new THREE.Mesh(new THREE.CylinderGeometry(1.5, 1.5, 0.8, 32), brick);
+  drum.position.set(-5, 0.4, -0.6);
+  const dome = new THREE.Mesh(new THREE.SphereGeometry(1.55, 48, 24, 0, Math.PI * 2, 0, Math.PI / 2), glaze({ base: '#2aa39a', deep: '#0f5552', cells: [6, 3], w: 1024, h: 512 }));
+  dome.position.set(-5, 0.8, -0.6);
+  const finial = new THREE.Mesh(new THREE.ConeGeometry(0.08, 0.7, 12), new THREE.MeshStandardMaterial({ color: 0xe2b54f, metalness: 1, roughness: 0.25 }));
+  finial.position.set(-5, 2.6, -0.6);
+  scene.add(drum, dome, finial);
+  // The minaret.
+  const shaft = new THREE.Mesh(new THREE.CylinderGeometry(0.42, 0.55, 11, 24), brick);
+  shaft.position.set(-7.6, -0.5, -2.6);
+  const balcony = new THREE.Mesh(new THREE.CylinderGeometry(0.75, 0.6, 0.35, 24), brick);
+  balcony.position.set(-7.6, 4.2, -2.6);
+  const lantern = new THREE.Mesh(new THREE.CylinderGeometry(0.35, 0.4, 1.0, 16), glaze({ base: '#2f63b8', deep: '#132a5c', cells: [3, 1], w: 512, h: 256 }));
+  lantern.position.set(-7.6, 4.9, -2.6);
+  const cap = new THREE.Mesh(new THREE.ConeGeometry(0.42, 0.7, 16), brick);
+  cap.position.set(-7.6, 5.75, -2.6);
+  const light = glow(0xffc070, 1.6, 0.7);
+  light.position.set(-7.6, 4.9, -2.6);
+  scene.add(shaft, balcony, lantern, cap, light);
+  [roof, drum, dome, shaft].forEach((m) => {
+    m.castShadow = true;
+  });
+  // The ground and the city of clay houses.
+  const ground = new THREE.Mesh(new THREE.PlaneGeometry(300, 300), new THREE.MeshStandardMaterial({ color: 0x7a6040, roughness: 1 }));
   ground.rotation.x = -Math.PI / 2;
   ground.position.y = -6;
+  ground.receiveShadow = true;
   scene.add(ground);
+  const houses = new THREE.InstancedMesh(new THREE.BoxGeometry(1, 1, 1), new THREE.MeshStandardMaterial({ roughness: 0.95 }), 420);
+  const m4 = new THREE.Matrix4();
+  const q = new THREE.Quaternion();
+  const c = new THREE.Color();
+  let k = 0;
+  for (let i = 0; i < 420; i++) {
+    const a = rand() * Math.PI * 2;
+    const r = 7 + Math.sqrt(rand()) * 55;
+    const x = Math.cos(a) * r - 3;
+    const z = Math.sin(a) * r;
+    if (Math.abs(x + 3.6) < 5 && Math.abs(z) < 4) continue;
+    // Keep the view from the roof open: no houses between the camera and the mosque.
+    if (z > 1.5 && x > -12 && x < 14) continue;
+    const w = 1.2 + rand() * 2.2;
+    const d = 1.2 + rand() * 2.2;
+    const h = 1 + rand() * 2.6;
+    q.setFromAxisAngle(new THREE.Vector3(0, 1, 0), rand() * 0.4);
+    m4.compose(new THREE.Vector3(x, -6 + h / 2, z), q, new THREE.Vector3(w, h, d));
+    houses.setMatrixAt(k, m4);
+    houses.setColorAt(k, c.setHSL(0.08 + rand() * 0.03, 0.35 + rand() * 0.1, 0.45 + rand() * 0.15));
+    k += 1;
+  }
+  houses.count = k;
+  houses.castShadow = true;
+  houses.receiveShadow = true;
+  scene.add(houses);
+  // More domes and minarets in the city.
+  for (let i = 0; i < 6; i++) {
+    const a = rand() * Math.PI * 2;
+    const r = 14 + rand() * 30;
+    const d = new THREE.Mesh(new THREE.SphereGeometry(1 + rand(), 24, 12, 0, Math.PI * 2, 0, Math.PI / 2), new THREE.MeshStandardMaterial({ color: rand() < 0.5 ? 0x2aa39a : 0x3a6fb8, roughness: 0.35 }));
+    d.position.set(Math.cos(a) * r - 3, -3.5, Math.sin(a) * r);
+    const base = new THREE.Mesh(new THREE.CylinderGeometry(1.2, 1.2, 2.5, 16), brick);
+    base.position.set(d.position.x, -4.8, d.position.z);
+    scene.add(d, base);
+  }
+  // Mountains on the horizon.
+  for (let i = 0; i < 26; i++) {
+    const a = (i / 26) * Math.PI * 2 + rand() * 0.1;
+    const h = 10 + rand() * 18;
+    const m = new THREE.Mesh(new THREE.ConeGeometry(14 + rand() * 10, h, 6), new THREE.MeshStandardMaterial({ color: 0x3a3048, roughness: 1, flatShading: true }));
+    m.position.set(Math.cos(a) * 120, -6 + h / 2, Math.sin(a) * 120);
+    scene.add(m);
+  }
+  // Birds circling: real wings, for comparison.
+  const birdMat = new THREE.MeshBasicMaterial({ color: 0x1a1410, side: THREE.DoubleSide });
+  const birds = Array.from({ length: 7 }, (_, i) => {
+    const g = new THREE.Group();
+    const wing = new THREE.Shape();
+    wing.moveTo(0, 0);
+    wing.lineTo(0.5, 0.1);
+    wing.lineTo(0.15, -0.1);
+    const geo = new THREE.ShapeGeometry(wing);
+    const l = new THREE.Mesh(geo, birdMat);
+    const r = new THREE.Mesh(geo, birdMat);
+    r.scale.x = -1;
+    g.add(l, r);
+    g.userData = { l, r, phase: rand() * 6, radius: 6 + rand() * 6, height: 4 + rand() * 3, speed: 0.3 + rand() * 0.2 };
+    scene.add(g);
+    return g;
+  });
+  return (t) => {
+    birds.forEach((b) => {
+      const { l, r, phase, radius, height, speed } = b.userData;
+      const a = t * speed + phase;
+      b.position.set(Math.cos(a) * radius + 2, height + Math.sin(a * 2) * 0.4, Math.sin(a) * radius - 4);
+      b.rotation.y = -a;
+      const flap = Math.sin(t * 9 + phase) * 0.6;
+      l.rotation.x = flap;
+      r.rotation.x = flap;
+    });
+    light.material.opacity = 0.6 + 0.15 * Math.sin(t * 3);
+  };
+}
+
+export function wings({ params = {} } = {}) {
+  const { scene, camera, sun, hemi } = createStage({ background: 0x2a3a52, ambient: 0.55, sun: 1.6, fog: [40, 160] });
+  scene.fog.color.set(0xb0806a);
+  hemi.color.set(0xffd2a8);
+  hemi.groundColor.set(0x2a2030);
+  // Low sun of the evening, from the west.
+  sun.color.set(0xffb070);
+  sun.position.set(14, 7, 8);
+  sun.castShadow = true;
+  sun.shadow.mapSize.set(2048, 2048);
+  Object.assign(sun.shadow.camera, { left: -14, right: 14, top: 14, bottom: -14, near: 1, far: 60 });
+  const city = nishapur(scene);
 
   // Al-Jawhari with two wooden panels tied to his arms: a realistic figure
   // (his photo with the wings), or the simple 3D one with boards.
@@ -604,7 +724,7 @@ export function wings({ params = {} } = {}) {
   gliderTag.position.set(0, 1.5, 0);
   const boardTag = label('деревянные створки: около метра', { size: 0.3, background: 'rgba(10,14,22,0.8)' });
   glider.add(gliderTag);
-  glider.position.set(4.5, 2.2, -2);
+  glider.position.set(3.4, 1.5, -1.6);
   scene.add(glider, boardTag);
 
   const title = captions([
@@ -621,6 +741,7 @@ export function wings({ params = {} } = {}) {
     ownFigure: true,
     update({ t, dt, p }) {
       title.update(p);
+      city(t);
       // Stands on the roof, jumps, and drops away below the edge.
       const jump = stage(p, 0.36, 0.42);
       const fall = stage(p, 0.68, 0.8);
@@ -657,8 +778,10 @@ export function wings({ params = {} } = {}) {
         wingR.rotation.z = 0;
       }
       title.sprite.position.set(1, 4.2, 0);
-      camera.position.set(lerp(2, 3.5, smooth(p)) + Math.sin(t * 0.1), 1.4, fitDistance(camera, compare > 0 ? 6.4 : 4.4));
-      camera.lookAt(1.2, 0.4, 0);
+      // Close by him on the roof, the city below; back for the comparison.
+      const back = smooth(compare);
+      camera.position.set(lerp(3.4, 5.5, back) + Math.sin(t * 0.1) * 0.4, lerp(1.9, 3.4, back), lerp(5.2, 10.5, back));
+      camera.lookAt(lerp(-0.4, 1.4, back), lerp(0.2 - fall * 1.5, 1.2, back), lerp(-0.6, -1, back));
       if (actor) {
         // The photo has no moving wings: he rocks and lifts a little with each «flap».
         man.position.y += Math.abs(Math.sin(t * 10)) * 0.08 * jump * (1 - fall);
