@@ -140,9 +140,11 @@ function roundRect(g, x, y, w, h, r) {
 
 // A text sprite. `size` is the world height of one line.
 // `template` reserves room when the text changes later via sprite.userData.set().
-export function label(text, { size = 0.5, color = '#f4ecd8', weight = 600, background = 'rgba(11,16,24,0.72)', template } = {}) {
+// `serif` gives the book face of the site (for formulas and titles).
+export const SERIF = "'Cormorant Garamond', 'Times New Roman', Georgia, serif";
+export function label(text, { size = 0.5, color = '#f4ecd8', weight = 600, background = 'rgba(11,16,24,0.72)', template, family: face, glow: halo = 0 } = {}) {
   const px = 64;
-  const family = 'Inter, system-ui, -apple-system, sans-serif';
+  const family = face ?? 'Inter, system-ui, -apple-system, sans-serif';
   const measure = document.createElement('canvas').getContext('2d');
   measure.font = `${weight} ${px}px ${family}`;
   const sizing = String(template ?? text).split('\n');
@@ -166,9 +168,14 @@ export function label(text, { size = 0.5, color = '#f4ecd8', weight = 600, backg
     g.fillStyle = color;
     g.textAlign = 'center';
     g.textBaseline = 'middle';
+    if (halo) {
+      g.shadowColor = color;
+      g.shadowBlur = px * 0.35 * halo;
+    }
     const lines = String(value).split('\n');
     const top = (h - lines.length * px * 1.3) / 2;
     lines.forEach((line, i) => g.fillText(line, w / 2, top + px * 1.3 * (i + 0.5)));
+    g.shadowBlur = 0;
     texture.needsUpdate = true;
   };
   draw(text);

@@ -20,3 +20,4 @@ public/media/shots/**/*.v[0-9].jpg
 public/media/cast/**/*.src.jpg
 __pycache__/
 public/media/cast/**/*.tmp
+public/lab/

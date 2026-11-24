@@ -45,7 +45,8 @@ function errorView(message) {
 
 /* ---------- Главная: список учёных ---------- */
 
-const posterUrl = (slug, name = 'portrait-1') => `/media/shots/${encodeURIComponent(slug)}/${name}.jpg`;
+// Posters on the cards are light copies of the portraits (tools/upscale.py).
+const posterUrl = (slug, name = 'poster') => `/media/shots/${encodeURIComponent(slug)}/${name}.jpg`;
 
 function scholarCard(s, i = 0) {
   const era = eraOf(s.era);
@@ -295,6 +296,14 @@ async function initHero(token) {
   if (!hero) return;
   heroDust(hero.querySelector('.hero-dust'));
   hero.querySelectorAll('[data-count]').forEach(countUp);
+  // The 3D title screen (an astrolabe under the night sky) replaces the slides
+  // once it is ready; without WebGL the slides stay.
+  import('./hero3d.js')
+    .then(({ startHero3D }) => {
+      if (!hero.isConnected || token !== renderToken) return;
+      if (startHero3D(hero, { reduced: reducedMotion() })) hero.classList.add('has-3d');
+    })
+    .catch(() => {});
   // Parallax: the title drifts slower than the page.
   const onScroll = () => {
     if (!hero.isConnected) return window.removeEventListener('scroll', onScroll);

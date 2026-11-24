@@ -85,6 +85,22 @@ function setBeam(m, a, b) {
   m.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), dir.normalize());
 }
 
+// Lifts the camera until the ground does not stand between it and the target.
+function keepInSight(cam, target) {
+  cam.y = Math.max(cam.y, groundHeight(cam.x, cam.z) + 2.2);
+  for (let k = 0; k < 8; k++) {
+    let worst = 0;
+    for (let i = 1; i < 16; i++) {
+      const u = i / 16;
+      const x = lerp(cam.x, target.x, u);
+      const z = lerp(cam.z, target.z, u);
+      worst = Math.max(worst, groundHeight(x, z) + 0.6 - lerp(cam.y, target.y, u));
+    }
+    if (worst <= 0) return;
+    cam.y += worst * 1.5;
+  }
+}
+
 export function biruniMeasure({ params = {}, ctx }) {
   const { scene, camera, sun, hemi } = createStage({ background: 0x9fb4c8, ambient: 0.75, sun: 2.2 });
   scene.background = new THREE.Color(0xa9b9c6);
@@ -345,19 +361,28 @@ export function biruniMeasure({ params = {}, ctx }) {
           pos: pos.clone().addScaledVector(new THREE.Vector3(-toTop.z, 0, toTop.x), 7).addScaledVector(toTop, -3).add(new THREE.Vector3(0, 3, 0)),
           look: pos.clone().addScaledVector(toTop, 2).add(new THREE.Vector3(0, 1.3, 0)),
         };
+        // On the summit: he on the left third, the plain and the horizon on the right.
         const summit = {
-          pos: top.clone().add(new THREE.Vector3(-3.2, 2.4, 5.8)),
-          look: top.clone().add(new THREE.Vector3(6, 0.6, 0)),
+          pos: top.clone().add(new THREE.Vector3(-3.6, 2.3, 7.4)),
+          look: top.clone().add(new THREE.Vector3(3.2, 1.1, 0)),
         };
         const blend = (a, b, u) => ({ pos: lerpV(a.pos, b.pos, u), look: lerpV(a.look, b.look, u) });
         let shot = blend(wide, shoulder, smooth(stage(p, 0.12, 0.24)));
         shot = blend(shot, follow, smooth(stage(p, 0.45, 0.5)));
         shot = blend(shot, summit, smooth(stage(p, 0.56, 0.63)));
-        camPos.lerp(shot.pos, first ? 1 : 0.08);
-        camLook.lerp(shot.look, first ? 1 : 0.08);
+        // Smooth, the same at any frame rate.
+        const ease = first ? 1 : 1 - Math.exp(-dt * 3);
+        camPos.lerp(shot.pos, ease);
+        camLook.lerp(shot.look, first ? 1 : 1 - Math.exp(-dt * 6));
         first = false;
+        // The camera never goes under the ground or behind the slope:
+        // he is always in sight, also while the camera moves up the mountain.
+        const chest = pos.clone().add(new THREE.Vector3(0, 1.2, 0));
+        keepInSight(camPos, chest.clone().add(new THREE.Vector3(0, 0.4, 0)));
         camera.position.copy(camPos);
-        camera.lookAt(camLook);
+        // While he climbs the camera keeps him in the middle of the frame.
+        const climbing = stage(p, 0.47, 0.5) * (1 - stage(p, 0.6, 0.67));
+        camera.lookAt(camLook.clone().lerp(chest, climbing));
         // The sun's shadow follows him.
         sun.position.copy(pos).add(new THREE.Vector3(-18, 26, 10));
         sun.target.position.copy(pos);

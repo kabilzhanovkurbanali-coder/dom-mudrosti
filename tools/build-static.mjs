@@ -46,7 +46,7 @@ await cp(PUBLIC, DIST, {
   recursive: true,
   // Of the scholars' figures only the cut-outs are needed (not their sources).
   filter: (src) =>
-    !src.startsWith(SHOTS) && !src.endsWith('.mp4') && !src.endsWith('.DS_Store') && !src.endsWith('.src.jpg') && !src.endsWith('manifest.json'),
+    !src.startsWith(SHOTS) && !src.startsWith(path.join(PUBLIC, 'lab')) && !src.endsWith('.mp4') && !src.endsWith('.DS_Store') && !src.endsWith('.src.jpg') && !src.endsWith('manifest.json'),
 });
 await mkdir(path.join(DIST, 'vendor', 'three'), { recursive: true });
 await copyFile(path.join(ROOT, 'node_modules', 'three', 'build', 'three.module.js'), path.join(DIST, 'vendor', 'three', 'three.module.js'));
@@ -85,7 +85,7 @@ for (const s of content.scholars) {
       audio += 1;
     }
   }
-  for (const name of used[s.slug]) {
+  for (const name of [...used[s.slug], 'poster']) {
     for (const file of [`${name}.jpg`, `${name}.depth.png`]) {
       const from = path.join(SHOTS, s.slug, file);
       if (!existsSync(from)) continue;

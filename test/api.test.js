@@ -110,7 +110,7 @@ test('filters by field and era, sorts by name', async () => {
   assert.deepEqual(timurid.body.scholars.map((s) => s.slug).sort(), ['al-kashi', 'ali-kushchi', 'alisher-navoi', 'ulugbek']);
 
   const modern = await get('/api/scholars?era=modern');
-  assert.deepEqual(modern.body.scholars.map((s) => s.slug).sort(), ['chingiz-aitmatov', 'chokan-valikhanov', 'kanysh-satbayev']);
+  assert.deepEqual(modern.body.scholars.map((s) => s.slug).sort(), ['chokan-valikhanov', 'chyngyz-aitmatov', 'kanysh-satbayev']);
 
   const byName = await get('/api/scholars?sort=name');
   const names = byName.body.scholars.map((s) => s.name);
@@ -213,15 +213,15 @@ test('scholars of Central Asia: Kyrgyzstan, Kazakhstan, Uzbekistan', async () =>
 
 test('people closer to our time: Navoi, Valikhanov, Satbayev, Aitmatov', async () => {
   const aitmatov = await get(`/api/scholars?q=${encodeURIComponent('Айтматов манкурт')}`);
-  assert.deepEqual(aitmatov.body.scholars.map((s) => s.slug), ['chingiz-aitmatov']);
-  for (const [slug, scene] of [['alisher-navoi', 'navoi-scales'], ['kanysh-satbayev', 'ore'], ['chingiz-aitmatov', 'translations'], ['chokan-valikhanov', 'journey']]) {
+  assert.deepEqual(aitmatov.body.scholars.map((s) => s.slug), ['chyngyz-aitmatov']);
+  for (const [slug, scene] of [['alisher-navoi', 'navoi-scales'], ['kanysh-satbayev', 'ore'], ['chyngyz-aitmatov', 'translations'], ['chokan-valikhanov', 'journey']]) {
     const { body } = await get(`/api/scholars/${slug}/film`);
     const animation = body.beats.flatMap((b) => b.shots).find((s) => s.scene === scene);
     assert.ok(animation, `${slug}: ${scene}`);
     assert.equal(animation.params.who, slug);
   }
   // Real people of modern times get no made-up figure in the animations.
-  const { body } = await get('/api/scholars/chingiz-aitmatov/film');
+  const { body } = await get('/api/scholars/chyngyz-aitmatov/film');
   assert.deepEqual(body.beats.flatMap((b) => b.shots).find((s) => s.scene === 'translations').params.cast, {});
 });
 

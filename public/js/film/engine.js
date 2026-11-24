@@ -19,7 +19,7 @@ function disposeTree(root) {
 
 // A warm room as a reflection map: brass, glass and stone in the 3D
 // animations reflect lamplight instead of looking like flat plastic.
-function makeEnvironment(renderer) {
+export function makeEnvironment(renderer) {
   const c = document.createElement('canvas');
   c.width = 512;
   c.height = 256;
@@ -44,7 +44,7 @@ function makeEnvironment(renderer) {
   return env;
 }
 
-function prepareScene(obj, environment, id, params) {
+export function prepareScene(obj, environment, id, params) {
   if (!obj.scene.environment) {
     obj.scene.environment = environment;
     obj.scene.environmentIntensity = 0.55;

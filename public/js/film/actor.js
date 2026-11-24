@@ -179,12 +179,18 @@ export function createActor(poses, { height = 1.85, cutBottom = 0, shadow = true
       }
       flipNow += ((facing < 0 ? 1 : 0) - flipNow) * (dt > 0 ? Math.min(1, dt * 10) : 1);
       const flip = flipNow > 0.5 ? 1 : 0;
-      mix = Math.min(1, mix + (dt > 0 ? dt / 0.35 : 1));
-      cards[0].material.uniforms.opacity.value = appear * (fadeFrom ? mix : 1);
+      // The new pose fades in over the old one. Until its picture has loaded
+      // the old pose stays, so he never vanishes between two poses.
+      const ready = (c) => Boolean(c.material.uniforms.map.value?.image?.width);
+      if (fadeFrom && !ready(cards[0])) mix = 0;
+      else mix = Math.min(1, mix + (dt > 0 ? dt / 0.35 : 1));
+      cards[0].visible = true;
+      cards[0].material.uniforms.opacity.value = ready(cards[0]) ? appear * (fadeFrom ? mix : 1) : 0;
       cards[1].material.uniforms.opacity.value = fadeFrom ? appear * (1 - mix) : 0;
       cards[1].visible = Boolean(fadeFrom) && mix < 1;
       if (mix >= 1) fadeFrom = null;
       for (const c of cards) c.material.uniforms.flip.value = flip;
+      cards[0].position.z = 0;
       cards[1].position.z = -0.002;
       // Breathing when still, a step rhythm when walking.
       const step = Math.abs(Math.sin(t * 5.2));
@@ -213,6 +219,8 @@ export function createActor(poses, { height = 1.85, cutBottom = 0, shadow = true
       }
     },
   };
+  // All poses start loading at once, so a change of pose has its picture ready.
+  for (const url of Object.values(poses)) texture(url);
   api.pose(names.includes('hold') ? 'hold' : names[0]);
   return api;
 }

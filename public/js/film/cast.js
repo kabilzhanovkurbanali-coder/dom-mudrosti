@@ -74,7 +74,7 @@ export function addPresenter(obj, sceneId, params = {}) {
     const bottom = -hh * (1 + 2 * shift);
     const narrow = camera.aspect < 1;
     // A waist-up picture is shown smaller, so his head is the same size.
-    const height = hh * 2 * (narrow ? 0.56 : 0.84) * (actor.kneeUp() ? 1 : 0.74);
+    const height = hh * 2 * (narrow ? 0.56 : 0.84) * (actor.kneeUp() ? 1 : 0.6);
     const width = actor.width() * height;
     const appear = clamp((frame.p - 0.015) / 0.07);
     local.set(side * (hw - width * 0.5 - hw * (narrow ? 0.02 : 0.04)), bottom - height * 0.04 + (1 - appear) * -height * 0.05, -depth);
